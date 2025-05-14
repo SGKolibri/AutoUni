@@ -1,0 +1,49 @@
+{
+  "devices": [
+    {
+      "id": 0,
+      "name": "Projetor",
+      "status": "offline"
+    },
+    {
+      "id": 1,
+      "name": "Servidor",
+      "status": "online"
+    },
+    {
+      "id": 2,
+      "name": "Roteador Wi-Fi",
+      "status": "online"
+    },
+    {
+      "id": 3,
+      "name": "Iluminação Principal",
+      "status": "online"
+    },
+    {
+      "id": 4,
+      "name": "Ar-Condicionado",
+      "status": "offline"
+    },
+    {
+      "id": 5,
+      "name": "Sistema de Som",
+      "status": "online"
+    },
+    {
+      "id": 6,
+      "name": "Iluminação Secundária",
+      "status": "online"
+    },
+    {
+      "id": 7,
+      "name": "Câmera de Segurança",
+      "status": "offline"
+    },
+    {
+      "id": 8,
+      "name": "Sistema de Alarme",
+      "status": "online"
+    }
+  ]
+}
