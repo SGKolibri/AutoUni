@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start dist/app.js",
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "build": "npm run clean && tsup src"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^8.0.0",
+    "@fastify/jwt": "^8.0.0",
+    "@fastify/swagger": "^8.0.0",
+    "@fastify/swagger-ui": "^3.0.0",
+    "@prisma/client": "^6.7.0",
+    "@types/node": "^22.7.5",
+    "dotenv": "^16.5.0",
+    "fastify": "^4.18.0",
+    "fastify-zod": "^1.4.0",
+    "nodemon": "^3.1.7",
+    "pm2": "^6.0.6",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3",
+    "zod": "^3.23.8"
+  }
+}

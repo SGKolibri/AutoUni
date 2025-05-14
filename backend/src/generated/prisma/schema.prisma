@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Building {
+  id     String  @id @default(cuid())
+  name   String
+  floors Floor[]
+}
+
+model Floor {
+  id         String   @id @default(cuid())
+  number     Int
+  buildingId String
+  building   Building @relation(fields: [buildingId], references: [id])
+  rooms      Room[]
+}
+
+model Room {
+  id      String   @id @default(cuid())
+  name    String
+  floorId String
+  floor   Floor    @relation(fields: [floorId], references: [id])
+  devices Device[]
+}
+
+model Device {
+  id     String @id @default(cuid())
+  name   String
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+  status String
+}
