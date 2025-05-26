@@ -26,8 +26,7 @@ function HomePage() {
           </linearGradient>
         </defs>
       </svg>
-
-      <div className="flex flex-col items-center justify-center py-4 tracking-wide">
+      <div className="flex flex-col items-center justify-center py-4 tracking-wide pb-20">
         <TemperatureSection />
         {/* Devices section*/}
         <DevicesSection />

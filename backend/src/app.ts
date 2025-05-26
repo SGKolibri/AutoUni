@@ -106,18 +106,17 @@ async function main() {
 
   //   console.log("Rebuilt at " + new Date().toLocaleString());
   //   console.log("Server started at " + new Date().toLocaleString());
-
   try {
+    const port = process.env.PORT ? Number(process.env.PORT) : 4567;
     await server
       .listen({
-        port: process.env.PORT ? Number(process.env.PORT) : 4567,
+        port,
         host: "0.0.0.0",
       })
       .then(() => {
+        console.log(`Server listening on port ${port}`);
         console.log(
-          `Server listening on ${
-            process.env.PORT ? Number(process.env.PORT) : 4567
-          }.`
+          `Swagger UI available at http://localhost:${port}/docs/static/index.html`
         );
       });
   } catch (err) {
