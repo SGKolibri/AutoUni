@@ -32,11 +32,8 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
   onUpdateDeviceProperty,
   onActivateScene,
 }) => {
-  // Group devices by type
   const groupedDevices: Record<string, Device[]> = (room.devices || []).reduce(
     (acc, dr) => {
-      // acc is the accumulator, dr is the current device-room relation
-      // Make sure we're accessing the device property correctly
       const device = dr.device;
       if (!device) return acc;
 

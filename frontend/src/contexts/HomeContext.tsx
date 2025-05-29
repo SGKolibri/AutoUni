@@ -75,6 +75,10 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [buildingsWithRelations, setBuildingsWithRelations] = useState<
+    Building[]
+  >([]);
+
   // Load buildings on initial render
   useEffect(() => {
     const fetchBuildings = async () => {
@@ -121,7 +125,7 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
       return;
 
     // Create a deep copy of buildings to safely modify
-    const buildingsWithRelations = buildings.map((building) => ({
+    const enrichedBuildings = buildings.map((building) => ({
       ...building,
       floors: floors
         .filter((floor) => floor.buildingId === building.id)
@@ -131,24 +135,22 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
         })),
     }));
 
-    setBuildings(buildingsWithRelations);
-    console.log("Buildings with relations:", buildingsWithRelations);
+    setBuildingsWithRelations(enrichedBuildings);
+    console.log("Buildings with relations:", enrichedBuildings);
   }, [buildings, floors, rooms]);
 
-  // Define a function to fetch scenes (not included in api.ts)
-  const getScenes = async (roomId: string): Promise<Scene[]> => {
-    // This is a placeholder. You'll need to implement this API endpoint
-    // or use a mock if scenes aren't supported by your backend yet
-    return [];
-  };
+  // const getScenes = async (roomId: string): Promise<Scene[]> => {
+  //   return [];
+  // };
 
   // Load scenes when a room is selected
   useEffect(() => {
     if (selectedRoom) {
       const fetchScenes = async () => {
         try {
-          const data = await getScenes(selectedRoom.id);
-          setScenes(data);
+          // const data = await getScenes(selectedRoom.id);
+          // setScenes(data);
+          console.log("Fetching scenes for room:", selectedRoom.id);
         } catch (err) {
           setError("Falha ao carregar cenas");
         }
@@ -162,7 +164,8 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
 
   const selectBuilding = async (buildingId: string) => {
     try {
-      const building = buildings.find((b) => b.id === buildingId) || null;
+      const building =
+        buildingsWithRelations.find((b) => b.id === buildingId) || null;
       setSelectedBuilding(building);
       setSelectedFloor(null);
       setSelectedRoom(null);
@@ -353,7 +356,7 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const value = {
-    buildings,
+    buildings: buildingsWithRelations,
     floors,
     rooms,
     selectedBuilding,

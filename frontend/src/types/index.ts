@@ -8,7 +8,6 @@ export enum DeviceType {
   FAN = "fan",
   OUTLET = "outlet",
   OTHER = "other",
-  // Add more device types as needed
 }
 
 export interface DeviceSetting {
@@ -71,5 +70,34 @@ export interface Building {
   name: string;
   floors?: Floor[]; // Optional for populated relation
 }
-
 // Keep your other interfaces like Scene and enums
+
+export interface Automation {
+  id: string;
+  name: string;
+  enabled: boolean;
+  trigger: {
+    type: "time" | "device" | "scene";
+    config: {
+      time?: string; // HH:mm format for time triggers
+      deviceId?: string; // For device state triggers
+      deviceState?: boolean;
+      sceneId?: string; // For scene activation triggers
+    };
+  };
+  actions: Array<{
+    type: "device" | "scene";
+    targetId: string; // Device ID or Scene ID
+    state?: boolean;
+    properties?: {
+      brightness?: number;
+      temperature?: number;
+      level?: number;
+    };
+  }>;
+  schedule?: {
+    repeat: "daily" | "weekly" | "once";
+    days?: number[]; // 0-6 for weekly repeat (0 = Sunday)
+    time: string; // HH:mm format
+  };
+}

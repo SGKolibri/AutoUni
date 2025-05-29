@@ -45,12 +45,12 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, toggleSidebar }) => {
       <div className="flex-1 flex justify-center">
         <div className="flex items-center">
           {selectedBuilding && (
-            <div className="flex items-center">
+            <div className="flex items-center text-sm md:text-md">
               <span className="text-gray-600">{selectedBuilding.name}</span>
               {selectedFloor && (
                 <>
                   <span className="mx-2 text-gray-400">/</span>
-                  <span className="text-gray-600">{selectedFloor.name}</span>
+                  <span className="text-gray-600">{selectedFloor.number}</span>
                 </>
               )}
               {selectedRoom && (

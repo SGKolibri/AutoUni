@@ -1,13 +1,19 @@
 import React from "react";
-import { Building, Building2, Home as HomeIcon } from "lucide-react";
+import { Building, Building2, Home as HomeIcon, Timer } from "lucide-react";
 import { useHome } from "../../contexts/HomeContext";
 
 interface SidebarProps {
   isOpen: boolean;
+  currentView: "home" | "automation";
+  onViewChange: (view: "home" | "automation") => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
-  const { buildings, selectedBuilding, selectBuilding } = useHome();
+const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  currentView,
+  onViewChange,
+}) => {
+  // const { buildings, selectedBuilding, selectBuilding } = useHome();
 
   return (
     <aside
@@ -16,7 +22,39 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       }`}
     >
       <div className="p-4">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Prédios</h2>
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+            Menu
+          </h2>
+          <div className="space-y-2">
+            <button
+              onClick={() => onViewChange("home")}
+              className={`w-full flex items-center p-3 rounded-lg transition-colors ${
+                currentView === "home"
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <HomeIcon size={20} className="mr-3" />
+              <span>Home</span>
+            </button>
+            <button
+              onClick={() => onViewChange("automation")}
+              className={`w-full flex items-center p-3 rounded-lg transition-colors ${
+                currentView === "automation"
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Timer size={20} className="mr-3" />
+              <span>Rotinas</span>
+            </button>
+          </div>
+        </div>
+        {/* 
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+          Buildings
+        </h2>
         <div className="space-y-2">
           {buildings.map((building) => (
             <button
@@ -38,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <span>{building.name}</span>
             </button>
           ))}
-        </div>
+        </div> */}
       </div>
     </aside>
   );

@@ -1,5 +1,12 @@
 import useApi from "../hooks/useApi";
-import type { Building, Floor, Room, Device, DeviceRoom } from "../types/index";
+import type {
+  Building,
+  Floor,
+  Room,
+  Device,
+  DeviceRoom,
+  Automation,
+} from "../types/index";
 
 // Building endpoints
 export const getBuildings = async (): Promise<Building[]> => {
@@ -198,5 +205,107 @@ export const disconnectDeviceFromRoom = async (
   }
 };
 
-console.log("ROOMS:", await getRooms());
-console.log("DEVICES:", await getDevices());
+const mockAutomations: Automation[] = [
+  {
+    id: "1",
+    name: "Morning Routine",
+    enabled: true,
+    trigger: {
+      type: "time",
+      config: {
+        time: "07:00",
+      },
+    },
+    actions: [
+      {
+        type: "scene",
+        targetId: "2", // Morning scene
+      },
+    ],
+    schedule: {
+      repeat: "weekly",
+      days: [1, 2, 3, 4, 5], // Monday to Friday
+      time: "07:00",
+    },
+  },
+  {
+    id: "2",
+    name: "Night Mode",
+    enabled: true,
+    trigger: {
+      type: "time",
+      config: {
+        time: "22:00",
+      },
+    },
+    actions: [
+      {
+        type: "device",
+        targetId: "1", // Living Room Light
+        state: false,
+      },
+      {
+        type: "device",
+        targetId: "3", // AC
+        state: true,
+        properties: {
+          temperature: 22,
+        },
+      },
+    ],
+    schedule: {
+      repeat: "daily",
+      time: "22:00",
+    },
+  },
+];
+
+export const getAutomations = async (): Promise<Automation[]> => {
+  try {
+    // Simulate API call
+    const { get } = useApi();
+    const automations = await get<Automation[]>("/api/automation/");
+    console.log("Fetched automations:", automations);
+    if (automations && automations.length > 0) {
+      return automations;
+    }
+    // If no automations are found, return mock data
+    return mockAutomations;
+  } catch (error) {
+    throw new Error("Failed to fetch automations");
+  }
+};
+
+export const createAutomation = (
+  automation: Omit<Automation, "id">
+): Promise<Automation> => {
+  const newAutomation = {
+    ...automation,
+    id: (mockAutomations.length + 1).toString(),
+  };
+  mockAutomations.push(newAutomation);
+  return Promise.resolve(newAutomation);
+};
+
+export const updateAutomation = (
+  id: string,
+  updates: Partial<Automation>
+): Promise<Automation> => {
+  const automation = mockAutomations.find((a) => a.id === id);
+  if (!automation) {
+    return Promise.reject(new Error("Automation not found"));
+  }
+
+  Object.assign(automation, updates);
+  return Promise.resolve(automation);
+};
+
+export const deleteAutomation = (id: string): Promise<boolean> => {
+  const index = mockAutomations.findIndex((a) => a.id === id);
+  if (index === -1) {
+    return Promise.resolve(false);
+  }
+
+  mockAutomations.splice(index, 1);
+  return Promise.resolve(true);
+};

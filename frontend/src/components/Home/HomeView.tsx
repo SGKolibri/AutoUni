@@ -56,7 +56,6 @@ const HomeView: React.FC = () => {
             toggleDevice(deviceId, device.status);
           }
         }}
-        // onToggleDevice={toggleDevice}
         onUpdateDeviceProperty={updateDeviceProperty}
         onActivateScene={activateScene}
       />
