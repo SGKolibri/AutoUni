@@ -248,6 +248,16 @@ exports.DEVICETYPE = exports.$Enums.DEVICETYPE = {
   OTHER: 'OTHER'
 };
 
+exports.scheduleDays = exports.$Enums.scheduleDays = {
+  DOMINGO: 'DOMINGO',
+  SEGUNDA: 'SEGUNDA',
+  TERCA: 'TERCA',
+  QUARTA: 'QUARTA',
+  QUINTA: 'QUINTA',
+  SEXTA: 'SEXTA',
+  SABADO: 'SABADO'
+};
+
 exports.Prisma.ModelName = {
   Building: 'Building',
   Floor: 'Floor',

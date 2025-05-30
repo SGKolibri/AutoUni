@@ -114,11 +114,28 @@ export namespace $Enums {
 
 export type DEVICETYPE = (typeof DEVICETYPE)[keyof typeof DEVICETYPE]
 
+
+export const scheduleDays: {
+  DOMINGO: 'DOMINGO',
+  SEGUNDA: 'SEGUNDA',
+  TERCA: 'TERCA',
+  QUARTA: 'QUARTA',
+  QUINTA: 'QUINTA',
+  SEXTA: 'SEXTA',
+  SABADO: 'SABADO'
+};
+
+export type scheduleDays = (typeof scheduleDays)[keyof typeof scheduleDays]
+
 }
 
 export type DEVICETYPE = $Enums.DEVICETYPE
 
 export const DEVICETYPE: typeof $Enums.DEVICETYPE
+
+export type scheduleDays = $Enums.scheduleDays
+
+export const scheduleDays: typeof $Enums.scheduleDays
 
 /**
  * ##  Prisma Client ʲˢ
@@ -17367,29 +17384,19 @@ export namespace Prisma {
 
   export type AggregateScheduleDay = {
     _count: ScheduleDayCountAggregateOutputType | null
-    _avg: ScheduleDayAvgAggregateOutputType | null
-    _sum: ScheduleDaySumAggregateOutputType | null
     _min: ScheduleDayMinAggregateOutputType | null
     _max: ScheduleDayMaxAggregateOutputType | null
   }
 
-  export type ScheduleDayAvgAggregateOutputType = {
-    day: number | null
-  }
-
-  export type ScheduleDaySumAggregateOutputType = {
-    day: number | null
-  }
-
   export type ScheduleDayMinAggregateOutputType = {
     id: string | null
-    day: number | null
+    day: $Enums.scheduleDays | null
     scheduleId: string | null
   }
 
   export type ScheduleDayMaxAggregateOutputType = {
     id: string | null
-    day: number | null
+    day: $Enums.scheduleDays | null
     scheduleId: string | null
   }
 
@@ -17400,14 +17407,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type ScheduleDayAvgAggregateInputType = {
-    day?: true
-  }
-
-  export type ScheduleDaySumAggregateInputType = {
-    day?: true
-  }
 
   export type ScheduleDayMinAggregateInputType = {
     id?: true
@@ -17466,18 +17465,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: ScheduleDayAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ScheduleDaySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: ScheduleDayMinAggregateInputType
@@ -17508,19 +17495,15 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ScheduleDayCountAggregateInputType | true
-    _avg?: ScheduleDayAvgAggregateInputType
-    _sum?: ScheduleDaySumAggregateInputType
     _min?: ScheduleDayMinAggregateInputType
     _max?: ScheduleDayMaxAggregateInputType
   }
 
   export type ScheduleDayGroupByOutputType = {
     id: string
-    day: number
+    day: $Enums.scheduleDays
     scheduleId: string
     _count: ScheduleDayCountAggregateOutputType | null
-    _avg: ScheduleDayAvgAggregateOutputType | null
-    _sum: ScheduleDaySumAggregateOutputType | null
     _min: ScheduleDayMinAggregateOutputType | null
     _max: ScheduleDayMaxAggregateOutputType | null
   }
@@ -17584,7 +17567,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      day: number
+      day: $Enums.scheduleDays
       scheduleId: string
     }, ExtArgs["result"]["scheduleDay"]>
     composites: {}
@@ -18011,7 +17994,7 @@ export namespace Prisma {
    */
   interface ScheduleDayFieldRefs {
     readonly id: FieldRef<"ScheduleDay", 'String'>
-    readonly day: FieldRef<"ScheduleDay", 'Int'>
+    readonly day: FieldRef<"ScheduleDay", 'scheduleDays'>
     readonly scheduleId: FieldRef<"ScheduleDay", 'String'>
   }
     
@@ -18656,6 +18639,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'scheduleDays'
+   */
+  export type EnumscheduleDaysFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'scheduleDays'>
+    
+
+
+  /**
+   * Reference to a field of type 'scheduleDays[]'
+   */
+  export type ListEnumscheduleDaysFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'scheduleDays[]'>
     
 
 
@@ -19386,7 +19383,7 @@ export namespace Prisma {
     OR?: ScheduleDayWhereInput[]
     NOT?: ScheduleDayWhereInput | ScheduleDayWhereInput[]
     id?: StringFilter<"ScheduleDay"> | string
-    day?: IntFilter<"ScheduleDay"> | number
+    day?: EnumscheduleDaysFilter<"ScheduleDay"> | $Enums.scheduleDays
     scheduleId?: StringFilter<"ScheduleDay"> | string
     schedule?: XOR<ScheduleScalarRelationFilter, ScheduleWhereInput>
   }
@@ -19404,7 +19401,7 @@ export namespace Prisma {
     AND?: ScheduleDayWhereInput | ScheduleDayWhereInput[]
     OR?: ScheduleDayWhereInput[]
     NOT?: ScheduleDayWhereInput | ScheduleDayWhereInput[]
-    day?: IntFilter<"ScheduleDay"> | number
+    day?: EnumscheduleDaysFilter<"ScheduleDay"> | $Enums.scheduleDays
     scheduleId?: StringFilter<"ScheduleDay"> | string
     schedule?: XOR<ScheduleScalarRelationFilter, ScheduleWhereInput>
   }, "id" | "scheduleId_day">
@@ -19414,10 +19411,8 @@ export namespace Prisma {
     day?: SortOrder
     scheduleId?: SortOrder
     _count?: ScheduleDayCountOrderByAggregateInput
-    _avg?: ScheduleDayAvgOrderByAggregateInput
     _max?: ScheduleDayMaxOrderByAggregateInput
     _min?: ScheduleDayMinOrderByAggregateInput
-    _sum?: ScheduleDaySumOrderByAggregateInput
   }
 
   export type ScheduleDayScalarWhereWithAggregatesInput = {
@@ -19425,7 +19420,7 @@ export namespace Prisma {
     OR?: ScheduleDayScalarWhereWithAggregatesInput[]
     NOT?: ScheduleDayScalarWhereWithAggregatesInput | ScheduleDayScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ScheduleDay"> | string
-    day?: IntWithAggregatesFilter<"ScheduleDay"> | number
+    day?: EnumscheduleDaysWithAggregatesFilter<"ScheduleDay"> | $Enums.scheduleDays
     scheduleId?: StringWithAggregatesFilter<"ScheduleDay"> | string
   }
 
@@ -20101,42 +20096,42 @@ export namespace Prisma {
 
   export type ScheduleDayCreateInput = {
     id?: string
-    day: number
+    day: $Enums.scheduleDays
     schedule: ScheduleCreateNestedOneWithoutScheduleDaysInput
   }
 
   export type ScheduleDayUncheckedCreateInput = {
     id?: string
-    day: number
+    day: $Enums.scheduleDays
     scheduleId: string
   }
 
   export type ScheduleDayUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    day?: IntFieldUpdateOperationsInput | number
+    day?: EnumscheduleDaysFieldUpdateOperationsInput | $Enums.scheduleDays
     schedule?: ScheduleUpdateOneRequiredWithoutScheduleDaysNestedInput
   }
 
   export type ScheduleDayUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    day?: IntFieldUpdateOperationsInput | number
+    day?: EnumscheduleDaysFieldUpdateOperationsInput | $Enums.scheduleDays
     scheduleId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ScheduleDayCreateManyInput = {
     id?: string
-    day: number
+    day: $Enums.scheduleDays
     scheduleId: string
   }
 
   export type ScheduleDayUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    day?: IntFieldUpdateOperationsInput | number
+    day?: EnumscheduleDaysFieldUpdateOperationsInput | $Enums.scheduleDays
   }
 
   export type ScheduleDayUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    day?: IntFieldUpdateOperationsInput | number
+    day?: EnumscheduleDaysFieldUpdateOperationsInput | $Enums.scheduleDays
     scheduleId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -20745,6 +20740,13 @@ export namespace Prisma {
     time?: SortOrder
   }
 
+  export type EnumscheduleDaysFilter<$PrismaModel = never> = {
+    equals?: $Enums.scheduleDays | EnumscheduleDaysFieldRefInput<$PrismaModel>
+    in?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    notIn?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    not?: NestedEnumscheduleDaysFilter<$PrismaModel> | $Enums.scheduleDays
+  }
+
   export type ScheduleScalarRelationFilter = {
     is?: ScheduleWhereInput
     isNot?: ScheduleWhereInput
@@ -20752,17 +20754,13 @@ export namespace Prisma {
 
   export type ScheduleDayScheduleIdDayCompoundUniqueInput = {
     scheduleId: string
-    day: number
+    day: $Enums.scheduleDays
   }
 
   export type ScheduleDayCountOrderByAggregateInput = {
     id?: SortOrder
     day?: SortOrder
     scheduleId?: SortOrder
-  }
-
-  export type ScheduleDayAvgOrderByAggregateInput = {
-    day?: SortOrder
   }
 
   export type ScheduleDayMaxOrderByAggregateInput = {
@@ -20777,8 +20775,14 @@ export namespace Prisma {
     scheduleId?: SortOrder
   }
 
-  export type ScheduleDaySumOrderByAggregateInput = {
-    day?: SortOrder
+  export type EnumscheduleDaysWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.scheduleDays | EnumscheduleDaysFieldRefInput<$PrismaModel>
+    in?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    notIn?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    not?: NestedEnumscheduleDaysWithAggregatesFilter<$PrismaModel> | $Enums.scheduleDays
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumscheduleDaysFilter<$PrismaModel>
+    _max?: NestedEnumscheduleDaysFilter<$PrismaModel>
   }
 
   export type FloorCreateNestedManyWithoutBuildingInput = {
@@ -21583,6 +21587,10 @@ export namespace Prisma {
     connect?: ScheduleWhereUniqueInput
   }
 
+  export type EnumscheduleDaysFieldUpdateOperationsInput = {
+    set?: $Enums.scheduleDays
+  }
+
   export type ScheduleUpdateOneRequiredWithoutScheduleDaysNestedInput = {
     create?: XOR<ScheduleCreateWithoutScheduleDaysInput, ScheduleUncheckedCreateWithoutScheduleDaysInput>
     connectOrCreate?: ScheduleCreateOrConnectWithoutScheduleDaysInput
@@ -21770,6 +21778,23 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumscheduleDaysFilter<$PrismaModel = never> = {
+    equals?: $Enums.scheduleDays | EnumscheduleDaysFieldRefInput<$PrismaModel>
+    in?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    notIn?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    not?: NestedEnumscheduleDaysFilter<$PrismaModel> | $Enums.scheduleDays
+  }
+
+  export type NestedEnumscheduleDaysWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.scheduleDays | EnumscheduleDaysFieldRefInput<$PrismaModel>
+    in?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    notIn?: $Enums.scheduleDays[] | ListEnumscheduleDaysFieldRefInput<$PrismaModel>
+    not?: NestedEnumscheduleDaysWithAggregatesFilter<$PrismaModel> | $Enums.scheduleDays
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumscheduleDaysFilter<$PrismaModel>
+    _max?: NestedEnumscheduleDaysFilter<$PrismaModel>
   }
 
   export type FloorCreateWithoutBuildingInput = {
@@ -23011,12 +23036,12 @@ export namespace Prisma {
 
   export type ScheduleDayCreateWithoutScheduleInput = {
     id?: string
-    day: number
+    day: $Enums.scheduleDays
   }
 
   export type ScheduleDayUncheckedCreateWithoutScheduleInput = {
     id?: string
-    day: number
+    day: $Enums.scheduleDays
   }
 
   export type ScheduleDayCreateOrConnectWithoutScheduleInput = {
@@ -23077,7 +23102,7 @@ export namespace Prisma {
     OR?: ScheduleDayScalarWhereInput[]
     NOT?: ScheduleDayScalarWhereInput | ScheduleDayScalarWhereInput[]
     id?: StringFilter<"ScheduleDay"> | string
-    day?: IntFilter<"ScheduleDay"> | number
+    day?: EnumscheduleDaysFilter<"ScheduleDay"> | $Enums.scheduleDays
     scheduleId?: StringFilter<"ScheduleDay"> | string
   }
 
@@ -23287,22 +23312,22 @@ export namespace Prisma {
 
   export type ScheduleDayCreateManyScheduleInput = {
     id?: string
-    day: number
+    day: $Enums.scheduleDays
   }
 
   export type ScheduleDayUpdateWithoutScheduleInput = {
     id?: StringFieldUpdateOperationsInput | string
-    day?: IntFieldUpdateOperationsInput | number
+    day?: EnumscheduleDaysFieldUpdateOperationsInput | $Enums.scheduleDays
   }
 
   export type ScheduleDayUncheckedUpdateWithoutScheduleInput = {
     id?: StringFieldUpdateOperationsInput | string
-    day?: IntFieldUpdateOperationsInput | number
+    day?: EnumscheduleDaysFieldUpdateOperationsInput | $Enums.scheduleDays
   }
 
   export type ScheduleDayUncheckedUpdateManyWithoutScheduleInput = {
     id?: StringFieldUpdateOperationsInput | string
-    day?: IntFieldUpdateOperationsInput | number
+    day?: EnumscheduleDaysFieldUpdateOperationsInput | $Enums.scheduleDays
   }
 
 

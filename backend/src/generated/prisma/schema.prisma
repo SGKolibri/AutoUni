@@ -56,6 +56,7 @@ enum DEVICETYPE {
   ROUTER
   WORKSTATION
   COMPUTER
+  AIR
   OTHER
 }
 
@@ -161,10 +162,20 @@ model Schedule {
 
 // ScheduleDay represents the days of the week for a scheduled automation, deu pra entender já
 model ScheduleDay {
-  id         String   @id @default(cuid())
-  day        Int // 0-6 (0 = Sunday)
+  id         String       @id @default(cuid())
+  day        scheduleDays
   scheduleId String
-  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  schedule   Schedule     @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 
   @@unique([scheduleId, day])
+}
+
+enum scheduleDays {
+  DOMINGO
+  SEGUNDA
+  TERCA
+  QUARTA
+  QUINTA
+  SEXTA
+  SABADO
 }

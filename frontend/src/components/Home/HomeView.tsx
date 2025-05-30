@@ -48,12 +48,12 @@ const HomeView: React.FC = () => {
         buildingName={selectedBuilding.name}
         scenes={scenes}
         onBack={() => selectFloor(selectedFloor.id)}
-        onToggleDevice={(deviceId: string) => {
+        onToggleDevice={(deviceId: string, NewStatus: string) => {
           const device = selectedRoom.devices?.find(
             (d) => d.deviceId === deviceId
           )?.device;
           if (device) {
-            toggleDevice(deviceId, device.status);
+            toggleDevice(deviceId, NewStatus);
           }
         }}
         onUpdateDeviceProperty={updateDeviceProperty}

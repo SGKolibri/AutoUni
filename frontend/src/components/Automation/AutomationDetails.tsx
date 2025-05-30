@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Automation } from "../../types";
 import { format } from "date-fns";
+import { ScheduleDays } from "../../types/index";
 
 interface AutomationDetailsProps {
   automation: Automation;
@@ -26,25 +27,32 @@ const AutomationDetails: React.FC<AutomationDetailsProps> = ({
   const getScheduleText = () => {
     if (!automation.schedule) return "No schedule";
 
-    const { repeat, days, time } = automation.schedule;
+    const { repeat, scheduleDays, time } = automation.schedule;
     const formattedTime = format(new Date(`2000-01-01T${time}`), "h:mm a");
 
+    console.log("Automation schedule:", automation.schedule);
+
     if (repeat === "daily") {
-      return `Todos os dias úteis às ${formattedTime}`;
-    } else if (repeat === "weekly" && days) {
-      const dayNames = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-      const selectedDays = days.map((day) => dayNames[day]).join(", ");
-      return `Every ${selectedDays} at ${formattedTime}`;
+      return `Todos os dias às ${formattedTime}`;
+    } else if (repeat === "weekly" && scheduleDays) {
+      const dayNameMap: Record<string, string> = {
+        [ScheduleDays.SUNDAY]: "Domingo",
+        [ScheduleDays.MONDAY]: "Segunda",
+        [ScheduleDays.TUESDAY]: "Terça",
+        [ScheduleDays.WEDNESDAY]: "Quarta",
+        [ScheduleDays.THURSDAY]: "Quinta",
+        [ScheduleDays.FRIDAY]: "Sexta",
+        [ScheduleDays.SATURDAY]: "Sábado",
+      };
+      const selectedDays = scheduleDays
+        .map(
+          (scheduleDay) =>
+            dayNameMap[scheduleDay.day] || scheduleDay.day.toString()
+        )
+        .join(", ");
+      return `Todos(as) ${selectedDays} às ${formattedTime}`;
     } else {
-      return `Once at ${formattedTime}`;
+      return `Uma vez às ${formattedTime}`;
     }
   };
 

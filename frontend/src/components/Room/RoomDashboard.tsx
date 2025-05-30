@@ -94,8 +94,9 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
                   <DeviceCard
                     key={device.id}
                     device={device}
-                    onToggle={(deviceId) => {
-                      onToggleDevice(deviceId, device.status);
+                    onToggle={(deviceId, status) => {
+                      console.log("onToggle called with:", deviceId, status);
+                      onToggleDevice(deviceId, status);
                     }}
                     onUpdateProperty={onUpdateDeviceProperty}
                   />

@@ -7,7 +7,7 @@ import {
   Moon,
 } from "lucide-react";
 import { useHome } from "../../contexts/HomeContext";
-import { useTheme } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { ColorModeContext } from "../../theme";
 
 interface HeaderProps {
@@ -27,8 +27,10 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, toggleSidebar }) => {
   const colorMode = useContext(ColorModeContext);
   const isDarkMode = theme.palette.mode === "dark";
 
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
-    <header className="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 h-16 border-b border-gray-200 flex items-center justify-between px-4 md:px-10 z-10">
+    <header className="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 h-16 border-b border-gray-200 flex items-center justify-between px-1 md:px-10 z-10">
       <div className="flex items-center">
         <button
           onClick={toggleSidebar}
@@ -46,9 +48,14 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, toggleSidebar }) => {
           onClick={handleHomeClick}
           className="flex items-center p-2 rounded-full hover:bg-gray-100 transition-colors"
         >
-          <HomeIcon size={26} className="text-blue-500 mr-2" />
-          <span className="text-2xl text-gray-900">Auto</span>
-          <span className="text-2xl font-semibold text-gray-900">Uni</span>
+          <HomeIcon
+            size={`${isMobile ? 20 : 24}`}
+            className="text-blue-500 mr-2"
+          />
+          <span className="text-lg md:text-2xl text-gray-900">Auto</span>
+          <span className="text-lg md:text-2xl font-semibold text-gray-900">
+            Uni
+          </span>
         </button>
       </div>
       <div className="flex-1 flex justify-center">

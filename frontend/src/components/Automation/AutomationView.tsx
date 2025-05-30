@@ -13,12 +13,16 @@ import {
 import { Automation } from "../../types";
 import * as api from "../../services/api";
 import AutomationDetails from "./AutomationDetails";
+import NewAutomationDialog from "./NewAutomationDialog";
+import { ScheduleDays } from "../../types/index";
 
 const AutomationView: React.FC = () => {
   const [automations, setAutomations] = useState<Automation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAutomation, setSelectedAutomation] =
     useState<Automation | null>(null);
+  const [isNewAutomationDialogOpen, setIsNewAutomationDialogOpen] =
+    useState(false);
 
   useEffect(() => {
     const fetchAutomations = async () => {
@@ -63,20 +67,42 @@ const AutomationView: React.FC = () => {
     }
   };
 
+  const handleCreateAutomation = async (newAutomation: any) => {
+    try {
+      const created = await api.createAutomation(newAutomation);
+      setAutomations([...automations, created]);
+    } catch (error) {
+      console.error("Failed to create automation:", error);
+    }
+  };
+
   const getScheduleText = (automation: Automation) => {
     if (!automation.schedule) return "No schedule";
 
-    const { repeat, days, time } = automation.schedule;
+    const { repeat, scheduleDays, time } = automation.schedule;
     const formattedTime = format(new Date(`2000-01-01T${time}`), "h:mm a");
 
     if (repeat === "daily") {
       return `Todos os dias úteis às ${formattedTime}`;
-    } else if (repeat === "weekly" && days) {
-      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      const selectedDays = days.map((day) => dayNames[day]).join(", ");
-      return `Tod ${selectedDays} at ${formattedTime}`;
+    } else if (repeat === "weekly" && scheduleDays) {
+      const dayNameMap: Record<string, string> = {
+        [ScheduleDays.SUNDAY]: "Domingo",
+        [ScheduleDays.MONDAY]: "Segunda",
+        [ScheduleDays.TUESDAY]: "Terça",
+        [ScheduleDays.WEDNESDAY]: "Quarta",
+        [ScheduleDays.THURSDAY]: "Quinta",
+        [ScheduleDays.FRIDAY]: "Sexta",
+        [ScheduleDays.SATURDAY]: "Sábado",
+      };
+      const selectedDays = scheduleDays // Changed from days to scheduleDays
+        .map(
+          (scheduleDay) =>
+            dayNameMap[scheduleDay.day] || scheduleDay.day.toString()
+        )
+        .join(", ");
+      return `${selectedDays} at ${formattedTime}`;
     } else {
-      return `Once at ${formattedTime}`;
+      return `Uma vez às ${formattedTime}`;
     }
   };
 
@@ -105,7 +131,10 @@ const AutomationView: React.FC = () => {
           <Timer size={24} className="text-blue-500 mr-3" />
           <h1 className="text-2xl font-semibold text-gray-900">Rotinas</h1>
         </div>
-        <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+        <button
+          onClick={() => setIsNewAutomationDialogOpen(true)}
+          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
           <Plus size={20} className="mr-2" />
           Criar rotina
         </button>
@@ -183,6 +212,11 @@ const AutomationView: React.FC = () => {
           </div>
         )}
       </div>
+      <NewAutomationDialog
+        isOpen={isNewAutomationDialogOpen}
+        onClose={() => setIsNewAutomationDialogOpen(false)}
+        onSave={handleCreateAutomation}
+      />
     </div>
   );
 };

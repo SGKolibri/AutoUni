@@ -7,6 +7,7 @@ import type {
   DeviceRoom,
   Automation,
 } from "../types/index";
+import { ScheduleDays } from "../types/index";
 
 // Building endpoints
 export const getBuildings = async (): Promise<Building[]> => {
@@ -156,10 +157,12 @@ export const updateDeviceStatus = async (
   status: string
 ): Promise<Device> => {
   try {
+    console.log("Updating device status:", deviceId, status);
     const { put } = useApi();
     const device = await put<Device>(`/api/device/${deviceId}/status`, {
-      status,
+      status: status,
     });
+    console.log("Updated device status:", device);
     return device;
   } catch (error) {
     throw new Error(`Failed to update status for device ${deviceId}`);
@@ -224,38 +227,14 @@ const mockAutomations: Automation[] = [
     ],
     schedule: {
       repeat: "weekly",
-      days: [1, 2, 3, 4, 5], // Monday to Friday
+      scheduleDays: [
+        { day: ScheduleDays.MONDAY }, // SEGUNDA
+        { day: ScheduleDays.TUESDAY }, // TERCA
+        { day: ScheduleDays.WEDNESDAY }, // QUARTA
+        { day: ScheduleDays.THURSDAY }, // QUINTA
+        { day: ScheduleDays.FRIDAY }, // SEXTA
+      ],
       time: "07:00",
-    },
-  },
-  {
-    id: "2",
-    name: "Night Mode",
-    enabled: true,
-    trigger: {
-      type: "time",
-      config: {
-        time: "22:00",
-      },
-    },
-    actions: [
-      {
-        type: "device",
-        targetId: "1", // Living Room Light
-        state: false,
-      },
-      {
-        type: "device",
-        targetId: "3", // AC
-        state: true,
-        properties: {
-          temperature: 22,
-        },
-      },
-    ],
-    schedule: {
-      repeat: "daily",
-      time: "22:00",
     },
   },
 ];
@@ -285,6 +264,21 @@ export const createAutomation = (
   };
   mockAutomations.push(newAutomation);
   return Promise.resolve(newAutomation);
+};
+
+export const createAutomationBackend = async (
+  automation: Omit<Automation, "id">
+): Promise<Automation> => {
+  try {
+    const { post } = useApi();
+    const createdAutomation = await post<Automation>(
+      "/api/automation/",
+      automation
+    );
+    return createdAutomation;
+  } catch (error) {
+    throw new Error("Failed to create automation");
+  }
 };
 
 export const updateAutomation = (

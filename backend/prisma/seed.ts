@@ -240,8 +240,8 @@ const createAutomations = async () => {
         },
       ],
       schedule: {
-        repeat: "daily",
-        days: [4],
+        repeat: "weekly", // Alterado de "daily" para "weekly"
+        days: ["SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA"],
         time: "23:20",
       },
     },
@@ -270,8 +270,8 @@ const createAutomations = async () => {
         },
       ],
       schedule: {
-        repeat: "daily",
-        days: [4],
+        repeat: "weekly", // Alterado de "daily" para "weekly"
+        days: ["SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA"],
         time: "23:15",
       },
     },
@@ -340,7 +340,7 @@ const createAutomations = async () => {
         ) {
           await tx.scheduleDay.createMany({
             data: data.schedule.days.map((day) => ({
-              day,
+              day: day as any,
               scheduleId: createdSchedule.id,
             })),
           });

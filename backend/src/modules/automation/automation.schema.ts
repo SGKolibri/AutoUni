@@ -25,9 +25,19 @@ const actionSchema = z.object({
   properties: actionPropertiesSchema.optional(),
 });
 
+const daysEnum = z.enum([
+  "DOMINGO",
+  "SEGUNDA",
+  "TERCA",
+  "QUARTA",
+  "QUINTA",
+  "SEXTA",
+  "SABADO",
+]);
+
 const scheduleSchema = z.object({
   repeat: z.enum(["daily", "weekly", "once"]),
-  days: z.array(z.number().min(0).max(6)).optional(),
+  days: z.array(daysEnum).optional(),
   time: z.string().regex(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/),
 });
 

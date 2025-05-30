@@ -8,6 +8,7 @@ import {
   Sofa,
   Power as DesktopTower,
   MonitorPlay,
+  Layers2,
 } from "lucide-react";
 
 interface RoomSelectorProps {
@@ -25,7 +26,6 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({
   onBack,
   onSelectRoom,
 }) => {
-  // Get the icon based on room name
   const getRoomIcon = (roomName: string) => {
     console.log("Room Name:", roomName);
     const name = roomName.toLowerCase();
@@ -41,7 +41,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({
       return <DesktopTower size={24} className="text-blue-500" />;
     if (name.includes("theater") || name.includes("media"))
       return <MonitorPlay size={24} className="text-blue-500" />;
-    return <Sofa size={24} className="text-blue-500" />;
+    return <Layers2 size={24} className="text-blue-500" />;
   };
 
   return (
@@ -81,7 +81,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({
                 <div className="text-xs px-2 py-1 bg-gray-100 rounded-full">
                   {
                     room.devices?.filter(
-                      (deviceRoom) => deviceRoom.device?.status === "on"
+                      (deviceRoom) => deviceRoom.device?.status === "active"
                     ).length
                   }{" "}
                   ativos

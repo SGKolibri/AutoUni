@@ -29,7 +29,7 @@ interface HomeContextType {
   selectBuilding: (buildingId: string) => void;
   selectFloor: (floorId: string) => void;
   selectRoom: (roomId: string) => void;
-  toggleDevice: (deviceId: string, currentStatus: string) => Promise<void>;
+  toggleDevice: (deviceId: string, NewStatus: string) => Promise<void>;
   updateDeviceProperty: (
     deviceId: string,
     property: string,
@@ -224,8 +224,10 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const toggleDevice = async (deviceId: string) => {
+  const toggleDevice = async (deviceId: string, NewStatus: string) => {
     try {
+      console.log("HomeContext toggleDevice called with status:", NewStatus);
+
       // Find the device in the selected room
       const deviceRoom = selectedRoom?.devices?.find(
         (d) => d.deviceId === deviceId
@@ -234,20 +236,22 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
         throw new Error("Device not found");
       }
 
-      const currentStatus = deviceRoom.device.status;
-      const newStatus = currentStatus === "on" ? "off" : "on";
+      console.log("Current device status:", deviceRoom.device.status);
 
-      await api.updateDeviceStatus(deviceId, newStatus);
+      // Use the provided NewStatus directly instead of toggling
+      const updatedDevice = await api.updateDeviceStatus(deviceId, NewStatus);
+      const effectiveStatus = NewStatus;
 
-      // Update local state as before
+      // Update local state
       if (selectedRoom && selectedRoom.devices) {
         const updatedDevices = selectedRoom.devices.map((dr) => {
           if (dr.deviceId === deviceId && dr.device) {
+            console.log("Updating device in state to:", effectiveStatus);
             return {
               ...dr,
               device: {
                 ...dr.device,
-                status: newStatus,
+                status: effectiveStatus as any,
               },
             };
           }
@@ -261,7 +265,7 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
       }
     } catch (err) {
       setError(
-        `Failed to toggle device: ${
+        `Falha ao atualizar status do dispositivo: ${
           err instanceof Error ? err.message : String(err)
         }`
       );

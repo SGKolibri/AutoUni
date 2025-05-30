@@ -24,10 +24,16 @@ export interface DeviceSetting {
   value: any;
 }
 
+export enum deviceStatus {
+  AVAILABLE = "available",
+  IN_USE = "in_use",
+  ACTIVE = "active",
+}
+
 export interface Device {
   id: string;
   name: string;
-  status: string; // Changed from boolean to string to match schema
+  status: deviceStatus; // Changed from boolean to string to match schema
   // Note: many-to-many relationship with rooms
   rooms?: DeviceRoom[]; // Optional field for populated relations
 
@@ -80,6 +86,16 @@ export interface Building {
 }
 // Keep your other interfaces like Scene and enums
 
+export enum ScheduleDays {
+  SUNDAY = "DOMINGO",
+  MONDAY = "SEGUNDA",
+  TUESDAY = "TERCA",
+  WEDNESDAY = "QUARTA",
+  THURSDAY = "QUINTA",
+  FRIDAY = "SEXTA",
+  SATURDAY = "SABADO",
+}
+
 export interface Automation {
   id: string;
   name: string;
@@ -95,7 +111,7 @@ export interface Automation {
   };
   actions: Array<{
     type: "device" | "scene";
-    targetId: string; // Device ID or Scene ID
+    targetId: string; // Device ID or Scene ID, no caso só device por enquanto
     state?: boolean;
     properties?: {
       brightness?: number;
@@ -105,7 +121,12 @@ export interface Automation {
   }>;
   schedule?: {
     repeat: "daily" | "weekly" | "once";
-    days?: number[]; // 0-6 for weekly repeat (0 = Sunday)
+    // days?: ScheduleDays[];
+    scheduleDays?: Array<{
+      id?: string; // Optional mas fica
+      day: ScheduleDays;
+      scheduleId?: string; // Optional mas fica tbm
+    }>;
     time: string; // HH:mm format
   };
 }
