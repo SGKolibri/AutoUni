@@ -31,6 +31,8 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+# Copy the generated Prisma client
+COPY --from=builder /app/src/generated ./src/generated
 
 # Set environment variables
 ENV NODE_ENV=production
