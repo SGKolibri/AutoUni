@@ -25,34 +25,28 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production --ignore-scripts
 
-# Copy prisma schema
+# Copy prisma schema and generate
 COPY prisma ./prisma/
-
-# Create the src directory structure and generate client
 RUN mkdir -p src
 RUN npx prisma generate
 
 # Copy built application
 COPY --from=builder /app/dist ./dist
 
-# Create the directory structure and copy the generated client
+# Copy the generated client
 RUN mkdir -p generated/prisma
-
-# Copy from the correct location
 RUN cp -r src/generated/prisma/* generated/prisma/
 
-# DEBUG: Check the compiled prisma.js file to see what it's trying to import
-RUN echo "=== Checking compiled prisma.js ===" && cat dist/utils/prisma.js
+# Create a symbolic link from the src directory to ensure all paths work
+RUN ln -sf /app/generated src/generated
 
-# DEBUG: Check current directory structure from dist perspective
-RUN echo "=== Directory structure from /app ===" && ls -la
-RUN echo "=== Directory structure from /app/dist ===" && ls -la dist/
-RUN echo "=== What ../generated/prisma resolves to from dist/utils/ ===" && \
-    cd dist/utils && ls -la ../../generated/prisma/ || echo "Path not found"
+# Also create the alternative path that the compiled code might be looking for
+RUN mkdir -p dist/generated && ln -sf /app/generated/prisma dist/generated/prisma
 
-# Make sure the path is correct
-RUN echo "=== Verifying path from dist/utils to generated/prisma ===" && \
-    cd dist/utils && test -f ../../generated/prisma/index.js && echo "Path is correct" || echo "Path is wrong"
+# Verify all possible paths
+RUN ls -la generated/prisma/index.js
+RUN ls -la dist/generated/prisma/index.js
+RUN cd dist/utils && ls -la ../../generated/prisma/index.js
 
 # Set environment variables
 ENV NODE_ENV=production
