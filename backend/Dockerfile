@@ -35,32 +35,24 @@ RUN npx prisma generate
 # Copy built application
 COPY --from=builder /app/dist ./dist
 
-# Debug: Check what was generated
-RUN echo "=== Checking src directory ===" && ls -la src/ || echo "src directory not found"
-RUN echo "=== Checking src/generated ===" && ls -la src/generated/ || echo "src/generated not found"
-RUN echo "=== Checking prisma output location ===" && find . -name "*.prisma" -type f
-RUN echo "=== Checking for prisma client ===" && find . -name "index.js" | grep -i prisma
-
 # Create the directory structure and copy the generated client
 RUN mkdir -p generated/prisma
 
-# Try multiple possible locations for the generated client
-RUN if [ -d "src/generated/prisma" ]; then \
-      echo "Copying from src/generated/prisma"; \
-      cp -r src/generated/prisma/* generated/prisma/; \
-    elif [ -d "node_modules/.prisma/client" ]; then \
-      echo "Copying from node_modules/.prisma/client"; \
-      cp -r node_modules/.prisma/client/* generated/prisma/; \
-    else \
-      echo "ERROR: Prisma client not found in any expected location"; \
-      echo "Available directories:"; \
-      find . -type d -name "*prisma*"; \
-      exit 1; \
-    fi
+# Copy from the correct location
+RUN cp -r src/generated/prisma/* generated/prisma/
 
-# Verify the copy worked
-RUN echo "=== Final verification ===" && ls -la generated/
-RUN echo "=== Generated prisma contents ===" && ls -la generated/prisma/
+# DEBUG: Check the compiled prisma.js file to see what it's trying to import
+RUN echo "=== Checking compiled prisma.js ===" && cat dist/utils/prisma.js
+
+# DEBUG: Check current directory structure from dist perspective
+RUN echo "=== Directory structure from /app ===" && ls -la
+RUN echo "=== Directory structure from /app/dist ===" && ls -la dist/
+RUN echo "=== What ../generated/prisma resolves to from dist/utils/ ===" && \
+    cd dist/utils && ls -la ../../generated/prisma/ || echo "Path not found"
+
+# Make sure the path is correct
+RUN echo "=== Verifying path from dist/utils to generated/prisma ===" && \
+    cd dist/utils && test -f ../../generated/prisma/index.js && echo "Path is correct" || echo "Path is wrong"
 
 # Set environment variables
 ENV NODE_ENV=production
