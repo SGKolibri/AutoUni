@@ -1,6 +1,8 @@
 import React from "react";
 import { Building, Building2, Home as HomeIcon, Timer } from "lucide-react";
 import { useHome } from "../../contexts/HomeContext";
+import { useTheme } from "@mui/material";
+import { tokens } from "../../theme";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,15 +17,24 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   // const { buildings, selectedBuilding, selectBuilding } = useHome();
 
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   return (
     <aside
-      className={`fixed top-16 left-0 bottom-0 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out z-10 ${
+      className={`fixed top-16 left-0 bottom-0 w-64  border-r border-gray-200 transform transition-transform duration-300 ease-in-out z-10 ${
         isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       }`}
+      style={{
+        backgroundColor: colors.primary[400],
+      }}
     >
       <div className="p-4">
         <div className="mb-8">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+          <h2
+            className="text-sm font-semibold  uppercase tracking-wider mb-4"
+            style={{ color: colors.grey[400] }}
+          >
             Menu
           </h2>
           <div className="space-y-2">
