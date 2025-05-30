@@ -35,9 +35,32 @@ RUN npx prisma generate
 # Copy built application
 COPY --from=builder /app/dist ./dist
 
-# Copy the generated client from src/generated to the location where compiled JS expects it
-# The compiled JS in dist/utils/prisma.js looks for ../generated/prisma
-RUN cp -r src/generated ./generated
+# Debug: Check what was generated
+RUN echo "=== Checking src directory ===" && ls -la src/ || echo "src directory not found"
+RUN echo "=== Checking src/generated ===" && ls -la src/generated/ || echo "src/generated not found"
+RUN echo "=== Checking prisma output location ===" && find . -name "*.prisma" -type f
+RUN echo "=== Checking for prisma client ===" && find . -name "index.js" | grep -i prisma
+
+# Create the directory structure and copy the generated client
+RUN mkdir -p generated/prisma
+
+# Try multiple possible locations for the generated client
+RUN if [ -d "src/generated/prisma" ]; then \
+      echo "Copying from src/generated/prisma"; \
+      cp -r src/generated/prisma/* generated/prisma/; \
+    elif [ -d "node_modules/.prisma/client" ]; then \
+      echo "Copying from node_modules/.prisma/client"; \
+      cp -r node_modules/.prisma/client/* generated/prisma/; \
+    else \
+      echo "ERROR: Prisma client not found in any expected location"; \
+      echo "Available directories:"; \
+      find . -type d -name "*prisma*"; \
+      exit 1; \
+    fi
+
+# Verify the copy worked
+RUN echo "=== Final verification ===" && ls -la generated/
+RUN echo "=== Generated prisma contents ===" && ls -la generated/prisma/
 
 # Set environment variables
 ENV NODE_ENV=production
