@@ -1,23 +1,41 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if you have it)
+# Copy package files for efficient caching
 COPY package*.json ./
+RUN npm ci --ignore-scripts
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application source code
-COPY . .
-
-# Generate Prisma client (optional but recommended for production)
+# Copy prisma schema for generation
+COPY prisma ./prisma/
 RUN npx prisma generate
 
-# Expose your app's port (adjust if your app runs on a different port)
-EXPOSE 3000
+# Copy source code
+COPY . .
 
-# Start your app
-CMD ["npm", "start"]
+# Build the application (if using TypeScript)
+RUN npm run build
+
+# Production image
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy built application
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/src/generated ./src/generated
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=10000
+
+# Expose port
+EXPOSE 10000
+
+# Start command
+CMD ["node", "dist/app.js"]
