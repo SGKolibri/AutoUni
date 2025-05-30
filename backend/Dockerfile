@@ -1,24 +1,19 @@
 FROM node:18-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files for efficient caching
+# Copy package files
 COPY package*.json ./
-
-
 RUN npm ci --ignore-scripts
 
-# Copy prisma schema for generation
+# Copy prisma schema and generate
 COPY prisma ./prisma/
-
-
 RUN npx prisma generate
 
 # Copy source code
 COPY . .
 
-# Build the application (if using TypeScript)
+# Build the application
 RUN npm run build
 
 # Production image
@@ -26,20 +21,24 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Install production dependencies
+COPY package*.json ./
+RUN npm ci --only=production --ignore-scripts
+
+# Copy prisma schema
+COPY prisma ./prisma/
+
+# Create the src directory structure and generate client
+RUN mkdir -p src
+RUN npx prisma generate
+
 # Copy built application
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-# Copy the generated Prisma client
-COPY --from=builder /app/src/generated ./src/generated
 
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=10000
 
-# Expose port
 EXPOSE 10000
 
-# Start command
 CMD ["node", "dist/app.js"]
