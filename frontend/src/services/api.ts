@@ -36,7 +36,6 @@ export const getFloors = async (): Promise<Floor[]> => {
   try {
     const { get } = useApi();
     const floors = await get<Floor[]>("/api/floor/");
-    console.log("Fetched floors:", floors);
     return floors;
   } catch (error) {
     throw new Error("Failed to fetch floors");
@@ -123,6 +122,7 @@ export const getDevices = async (): Promise<Device[]> => {
   try {
     const { get } = useApi();
     const devices = await get<Device[]>("/api/device/");
+    console.log("Fetched devices:", devices);
     return devices;
   } catch (error) {
     throw new Error("Failed to fetch devices");

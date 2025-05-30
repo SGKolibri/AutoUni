@@ -85,7 +85,6 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
       try {
         setIsLoading(true);
         const data = await api.getBuildings();
-        console.log("Fetched buildings:", data);
         setBuildings(data);
         setIsLoading(false);
       } catch (err) {
@@ -98,7 +97,6 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
       try {
         const data = await api.getFloors();
         setFloors(data);
-        console.log("Fetched floors:", data);
       } catch (err) {
         setError("Falha ao carregar andares");
       }
@@ -108,7 +106,6 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
       try {
         const data = await api.getRooms();
         setRooms(data);
-        console.log("Fetched rooms:", data);
       } catch (err) {
         setError("Falha ao carregar salas");
       }
@@ -136,7 +133,6 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
     }));
 
     setBuildingsWithRelations(enrichedBuildings);
-    console.log("Buildings with relations:", enrichedBuildings);
   }, [buildings, floors, rooms]);
 
   // const getScenes = async (roomId: string): Promise<Scene[]> => {
@@ -150,7 +146,6 @@ export const HomeProvider: React.FC<{ children: ReactNode }> = ({
         try {
           // const data = await getScenes(selectedRoom.id);
           // setScenes(data);
-          console.log("Fetching scenes for room:", selectedRoom.id);
         } catch (err) {
           setError("Falha ao carregar cenas");
         }

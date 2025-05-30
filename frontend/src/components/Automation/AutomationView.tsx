@@ -8,13 +8,17 @@ import {
   ToggleLeft,
   Trash2,
   Edit,
+  ArrowRight,
 } from "lucide-react";
 import { Automation } from "../../types";
 import * as api from "../../services/api";
+import AutomationDetails from "./AutomationDetails";
 
 const AutomationView: React.FC = () => {
   const [automations, setAutomations] = useState<Automation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedAutomation, setSelectedAutomation] =
+    useState<Automation | null>(null);
 
   useEffect(() => {
     const fetchAutomations = async () => {
@@ -39,6 +43,9 @@ const AutomationView: React.FC = () => {
           automation.id === id ? { ...automation, enabled } : automation
         )
       );
+      if (selectedAutomation?.id === id) {
+        setSelectedAutomation({ ...selectedAutomation, enabled });
+      }
     } catch (error) {
       console.error("Failed to toggle automation:", error);
     }
@@ -48,6 +55,9 @@ const AutomationView: React.FC = () => {
     try {
       await api.deleteAutomation(id);
       setAutomations(automations.filter((automation) => automation.id !== id));
+      if (selectedAutomation?.id === id) {
+        setSelectedAutomation(null);
+      }
     } catch (error) {
       console.error("Failed to delete automation:", error);
     }
@@ -60,11 +70,11 @@ const AutomationView: React.FC = () => {
     const formattedTime = format(new Date(`2000-01-01T${time}`), "h:mm a");
 
     if (repeat === "daily") {
-      return `Every day at ${formattedTime}`;
+      return `Todos os dias úteis às ${formattedTime}`;
     } else if (repeat === "weekly" && days) {
       const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       const selectedDays = days.map((day) => dayNames[day]).join(", ");
-      return `Every ${selectedDays} at ${formattedTime}`;
+      return `Tod ${selectedDays} at ${formattedTime}`;
     } else {
       return `Once at ${formattedTime}`;
     }
@@ -78,16 +88,26 @@ const AutomationView: React.FC = () => {
     );
   }
 
+  if (selectedAutomation) {
+    return (
+      <AutomationDetails
+        automation={selectedAutomation}
+        onBack={() => setSelectedAutomation(null)}
+        onToggle={handleToggleAutomation}
+      />
+    );
+  }
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center">
           <Timer size={24} className="text-blue-500 mr-3" />
-          <h1 className="text-2xl font-semibold text-gray-900">Automations</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">Rotinas</h1>
         </div>
         <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
           <Plus size={20} className="mr-2" />
-          New Automation
+          Criar rotina
         </button>
       </div>
 
@@ -131,12 +151,21 @@ const AutomationView: React.FC = () => {
             </div>
 
             <div className="border-t border-gray-100 pt-4 mt-4">
-              <div className="flex items-center text-sm text-gray-500">
-                <Clock size={16} className="mr-2" />
-                <span>
-                  {automation.actions.length} action
-                  {automation.actions.length !== 1 ? "s" : ""}
-                </span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center text-sm text-gray-500">
+                  <Clock size={16} className="mr-2" />
+                  <span>
+                    {automation.actions.length}
+                    {automation.actions.length !== 1 ? " ação" : " ações"}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setSelectedAutomation(automation)}
+                  className="flex items-center text-blue-500 hover:text-blue-600 transition-colors text-sm font-medium"
+                >
+                  Ver detalhes
+                  <ArrowRight size={16} className="ml-1" />
+                </button>
               </div>
             </div>
           </div>
@@ -146,11 +175,10 @@ const AutomationView: React.FC = () => {
           <div className="text-center py-12">
             <Timer size={48} className="mx-auto text-gray-300 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No automations yet
+              Sem rotinas criadas
             </h3>
             <p className="text-gray-500">
-              Create your first automation to start controlling your devices
-              automatically.
+              Registre uma rotina para automatizar suas ações diárias.
             </p>
           </div>
         )}

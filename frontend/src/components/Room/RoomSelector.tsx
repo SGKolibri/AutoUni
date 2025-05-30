@@ -27,6 +27,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({
 }) => {
   // Get the icon based on room name
   const getRoomIcon = (roomName: string) => {
+    console.log("Room Name:", roomName);
     const name = roomName.toLowerCase();
     if (name.includes("kitchen"))
       return <Kitchen size={24} className="text-blue-500" />;

@@ -37,7 +37,7 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
       const device = dr.device;
       if (!device) return acc;
 
-      const type = device.type || "unknown";
+      const type = device.type || "Tipos não definido";
       if (!acc[type]) {
         acc[type] = [];
       }
@@ -46,6 +46,8 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
     },
     {} as Record<string, Device[]>
   );
+
+  console.log("Grouped Devices:", groupedDevices);
 
   return (
     <div>
@@ -80,7 +82,7 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
       )}
 
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Devices</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Dispositivos</h3>
         <div className="space-y-6">
           {Object.entries(groupedDevices).map(([type, devices]) => (
             <div key={type}>

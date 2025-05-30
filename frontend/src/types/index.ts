@@ -4,9 +4,17 @@ export enum DeviceType {
   LOCK = "lock",
   CAMERA = "camera",
   SPEAKER = "speaker",
-  BLINDS = "blinds",
   FAN = "fan",
   OUTLET = "outlet",
+  PRINTER = "printer",
+  SENSOR = "sensor",
+  WORKSTATION = "workstation",
+  PROJECTOR = "projector",
+  SWITCH = "switch",
+  PLUG = "plug",
+  AIR = "air", // For air conditioning or air purifiers
+  ROUTER = "router", // For network devices
+  COMPUTER = "computer", // For general computers
   OTHER = "other",
 }
 
