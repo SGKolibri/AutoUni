@@ -1,6 +1,6 @@
 # AutoUni - Sistema de Gerenciamento Inteligente para Universidades
 
-**AutoUni** é uma plataforma completa de gerenciamento predial desenvolvida especificamente para ambientes universitários. O sistema permite o controle e automação inteligente de diversos dispositivos distribuídos em múltiplos prédios, andares e salas, utilizando **Arduinos** e um **SBC centralizado** para criar uma infraestrutura universitária mais eficiente e conectada.
+**AutoUni** é uma plataforma completa de gerenciamento predial desenvolvida especificamente para ambientes universitários. O sistema permite o controle e automação inteligente de diversos dispositivos distribuídos em múltiplos prédios, andares e salas, utilizando **ESP32** para criar uma infraestrutura universitária mais eficiente e conectada.
 
 ---
 
