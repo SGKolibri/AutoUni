@@ -112,7 +112,7 @@ Relés, sensores (PZEM, SCT-013), dispositivos IR
                                  |
                                  | REST/MQTT/WebSocket
           +----------------------+---------------------------+
-          |                 Home Assistant (opcional)        |
+          |                 Home Assistant                   |
           |  - Controle direto dos dispositivos via MQTT     |
           |  - Rotinas básicas e automações locais           |
           |  - Coleta de dados temporária                    |
