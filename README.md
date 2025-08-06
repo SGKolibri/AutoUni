@@ -1,10 +1,10 @@
-# 🎓 AutoUni - Sistema de Gerenciamento Inteligente para Universidades
+# AutoUni - Sistema de Gerenciamento Inteligente para Universidades
 
 **AutoUni** é uma plataforma completa de gerenciamento predial desenvolvida especificamente para ambientes universitários. O sistema permite o controle e automação inteligente de diversos dispositivos distribuídos em múltiplos prédios, andares e salas, utilizando **Arduinos** e um **SBC centralizado** para criar uma infraestrutura universitária mais eficiente e conectada.
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 - **Gerenciamento Hierárquico de Edifícios**  
   Organize e navegue facilmente pela estrutura de prédios, andares e salas
@@ -32,7 +32,7 @@
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 ### Frontend
 
@@ -55,7 +55,7 @@
 
 ---
 
-## 📋 Estrutura do Projeto
+## Estrutura do Projeto
 
 O sistema é organizado em módulos que representam os principais componentes:
 
@@ -67,7 +67,7 @@ O sistema é organizado em módulos que representam os principais componentes:
 
 ---
 
-## 🔌 Hardware
+## Hardware
 
 - **Arduinos** para controle local de dispositivos
 - **SBC** (single-board computer) como Raspberry Pi ou Orange Pi para centralização
@@ -76,16 +76,16 @@ O sistema é organizado em módulos que representam os principais componentes:
 
 ---
 
-## 🚀 Como Começar
+## Como Começar
 
-### ✅ Pré-requisitos
+### Pré-requisitos
 
 - Node.js (v18 ou superior)
 - npm ou yarn
 - Banco de dados PostgreSQL
 - Arduino IDE (para programação dos dispositivos)
 
-### 📦 Instalação
+### Instalação
 
 1. Clone o repositório:
 
@@ -137,7 +137,7 @@ O sistema é organizado em módulos que representam os principais componentes:
 
 ---
 
-## 📱 Estrutura da Aplicação
+## Estrutura da Aplicação
 
 - **Visão Geral**: Navegação por prédios, andares e salas
 - **Painel de Sala**: Controle de dispositivos e ativação de cenas em salas específicas
@@ -145,7 +145,7 @@ O sistema é organizado em módulos que representam os principais componentes:
 
 ---
 
-## 🔌 Endpoints da API
+## Endpoints da API
 
 A aplicação se comunica com uma API RESTful. Principais endpoints:
 
@@ -158,7 +158,7 @@ A aplicação se comunica com uma API RESTful. Principais endpoints:
 
 ---
 
-## 🔮 Melhorias Futuras
+## Melhorias Futuras
 
 - Aplicativo móvel
 - Otimização de energia baseada em IA
