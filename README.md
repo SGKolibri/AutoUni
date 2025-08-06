@@ -190,7 +190,7 @@ Relés, sensores (PZEM, SCT-013), dispositivos IR
 
 ---
 
-## Futuras Extensões
+## Futuras Extensões (Analisar viabilidade)
 
 - Reconhecimento de presença via BLE, RFID ou Wi-Fi
 - Interface mobile (PWA ou app nativo para Android)
