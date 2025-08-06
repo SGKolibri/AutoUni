@@ -1,15 +1,22 @@
-# Fase 06
+## Fase 6 – Funcionalidades Secundárias e Testes em Campo
 
 **Duração estimada:** 3 meses
 
-| Atividade                                        | Descrição                                                       |
-|--------------------------------------------------|-----------------------------------------------------------------|
-| Integração com dispositivos IR (AC, projetores)  | Controle via ESP32 + sensor IR                                 |
-| Integração com travas elétricas e alto-falantes  | Controle via relés ou GPIO                                     |
-| Protótipo em ambiente real (salas reais)         | Instalação em 1-2 salas piloto                                  |
-| Testes de estabilidade e consumo                 | Avaliação do sistema em tempo real                             |
-| Refino da interface e UX                         | Ajustes baseados no uso prático                                |
+**Descrição:** Integração de novos dispositivos, testes reais em salas, validação de robustez e UX.
 
-**Resultado esperado:**
+**Atividades:**
 
-- Testes em campo com todos os módulos principais funcionando, controle real de dispositivos diversos.
+- [ ] Controlar AC/projetores via IR (transmissão de comandos)
+- [ ] Controle de travas e alto-falantes com relé
+- [ ] Instalar protótipo completo em 1 ou 2 salas reais
+- [ ] Testar fallback via HA quando backend indisponível
+- [ ] Avaliar desempenho MQTT em campo
+- [ ] Ajustar interface conforme feedback de uso real
+
+**Critérios de Aceite:**
+
+- [ ] Dispositivos adicionais controlados com sucesso
+- [ ] Instalação física funciona sem interrupções
+- [ ] HA mantém automações locais se backend falhar
+- [ ] Tempo de resposta aceitável em condições reais
+- [ ] Relatórios e gráficos exibem dados coletados das salas reais

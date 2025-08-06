@@ -1,15 +1,21 @@
-# Fase 04
+## Fase 4 – Cálculo Energético e Monitoramento
 
 **Duração estimada:** 2 meses
 
-| Atividade                                | Descrição                                                       |
-|------------------------------------------|-----------------------------------------------------------------|
-| Integração com sensores PZEM / SCT-013   | ESP32 enviando dados de corrente/tensão via MQTT               |
-| Armazenamento de logs energéticos        | `energy_logs` em PostgreSQL                                    |
-| Cálculo automático por dispositivo/sala  | Consumo acumulado, por período, por tipo                       |
-| Dashboard Angular com gráficos           | Exibição gráfica de consumo por localização                    |
-| Geração de relatórios                    | Relatórios simples (ex: consumo mensal por sala)               |
+**Descrição:** Registrar e processar dados energéticos recebidos dos dispositivos, exibindo relatórios e gráficos.
 
-**Resultado esperado:**
+**Atividades:**
 
-- Sistema funcional de monitoramento e visualização de consumo energético por sala/dispositivo.
+- [ ] Receber dados contínuos de corrente/tensão dos sensores MQTT
+- [ ] Criar estrutura de logs energéticos no banco de dados
+- [ ] Implementar cálculos automáticos de consumo por sala/dispositivo
+- [ ] Criar gráficos de consumo no frontend com filtros por local e tempo
+- [ ] Exportação simples de relatórios mensais
+
+**Critérios de Aceite:**
+
+- [ ] Backend armazena leituras periódicas corretamente
+- [ ] Cálculo de kWh funciona por dispositivo, por período
+- [ ] Frontend exibe gráficos funcionais com dados reais
+- [ ] Admin consegue exportar relatório de consumo mensal em formato legível
+- [ ] Interface visual clara e filtros intuitivos implementados
