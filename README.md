@@ -199,4 +199,5 @@ Relés, sensores (PZEM, SCT-013), dispositivos IR
 - Exportação de relatórios em PDF e CSV
 - Alertas automáticos para consumo elevado ou falhas
 - Integração com sistemas acadêmicos e administrativos
+- Venda e comercialização do sistema
 
