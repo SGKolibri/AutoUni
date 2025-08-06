@@ -37,7 +37,7 @@ AutoUni integra dispositivos físicos baseados em **ESP32** instalados em cada s
 - Banco de dados: **PostgreSQL**
 - Cálculo energético, automações, API REST e WebSocket
 
-### Automação Local (opcional)
+### Automação Local
 - **Home Assistant**
   - Controle direto de dispositivos MQTT
   - Automação de rotinas básicas locais
