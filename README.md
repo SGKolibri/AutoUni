@@ -89,7 +89,7 @@ Relés, sensores (PZEM, SCT-013), dispositivos IR
 ```plaintext
 +--------------------------------------------------------------+
 |                           Usuário Final                      |
-|          (Administração, TI, Eng. Elétrica, Coordenação)     |
+|                (Administração, TI, Coordenação)              |
 +----------------------+--------------------+------------------+
                                  |                    
                         +--------v--------+  
