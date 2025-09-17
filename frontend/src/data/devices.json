@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Projector 1",
+    "status": "available"
+  },
+  {
+    "name": "Smart Board",
+    "status": "in_use"
+  },
+  {
+    "name": "AC Unit B300",
+    "status": "in_use"
+  },
+  {
+    "name": "Classroom Camera",
+    "status": "available"
+  },
+  {
+    "name": "Digital Podium",
+    "status": "available"
+  },
+  {
+    "name": "Motion Sensor",
+    "status": "active"
+  },
+  {
+    "name": "Smart Lighting",
+    "status": "active"
+  },
+  {
+    "name": "Speaker System",
+    "status": "available"
+  },
+  {
+    "name": "Computer Workstation",
+    "status": "in_use"
+  },
+  {
+    "name": "Interactive Display",
+    "status": "available"
+  }
+]

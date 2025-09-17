@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Projetor",
+    "status": "available",
+    "type": "PROJECTOR"
+  },
+  {
+    "name": "Servidor",
+    "status": "in_use",
+    "type": "ROUTER"
+  },
+  {
+    "name": "Ar-condicionado",
+    "status": "maintenance",
+    "type": "AIR"
+  },
+  {
+    "name": "Câmera de segurança",
+    "status": "active",
+    "type": "CAMERA"
+  },
+  {
+    "name": "Impressora",
+    "status": "available",
+    "type": "PRINTER"
+  },
+  {
+    "name": "Sensor de movimento",
+    "status": "active",
+    "type": "SENSOR"
+  },
+  {
+    "name": "Lâmpada smart",
+    "status": "active",
+    "type": "LIGHT"
+  },
+  {
+    "name": "Sistema de som",
+    "status": "available",
+    "type": "SPEAKER"
+  },
+  {
+    "name": "Workstation",
+    "status": "in_use",
+    "type": "WORKSTATION"
+  },
+  {
+    "name": "Servidor de arquivos",
+    "status": "active",
+    "type": "COMPUTER"
+  }
+]
