@@ -48,8 +48,8 @@ interface DeviceRoomWithId extends DeviceRoom {
   id: string;
 }
 
-const deviceRooms: DeviceRoomWithId[] = Array.isArray(deviceRoomsData) 
-  ? deviceRoomsData.map((deviceRoom, index) => ({
+const deviceRooms: DeviceRoomWithId[] = Array.isArray(deviceRoomsData) && deviceRoomsData.length > 0
+  ? deviceRoomsData.map((deviceRoom: any, index) => ({
       id: (index + 1).toString(),
       deviceId: deviceRoom.deviceId || "1",
       roomId: deviceRoom.roomId || "1",
@@ -75,7 +75,7 @@ const automations: Automation[] = Array.isArray(automationsData)
   : [];
 
 const scenes: Scene[] = Array.isArray(scenesData) && scenesData.length > 0
-  ? scenesData.map((scene, index) => ({
+  ? scenesData.map((scene: any, index) => ({
       id: (index + 1).toString(),
       name: scene.name || `Scene ${index + 1}`,
       description: scene.description || "",
