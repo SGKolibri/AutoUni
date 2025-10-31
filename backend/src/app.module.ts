@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { RealtimeGateway } from './realtime/realtime.gateway';
+import { RealtimeGateway } from './modules/realtime/realtime.gateway';
 import { PrismaService } from 'prisma/prisma.service';
 
 @Module({

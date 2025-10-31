@@ -4,7 +4,9 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
-  USER = 'USER',
+  COORDINATOR = 'COORDINATOR',
+  TECHNICIAN = 'TECHNICIAN',
+  VIEWER = 'VIEWER',
 }
 
 export interface IUserRepository {
