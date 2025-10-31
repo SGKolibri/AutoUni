@@ -1,0 +1,225 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  COORDINATOR
+  TECHNICIAN
+  VIEWER
+}
+
+enum RoomType {
+  CLASSROOM
+  LAB
+  OFFICE
+  AUDITORIUM
+  LIBRARY
+  OTHER
+}
+
+enum DeviceType {
+  LIGHT
+  AC
+  PROJECTOR
+  SPEAKER
+  LOCK
+  SENSOR
+  OTHER
+}
+
+enum DeviceStatus {
+  ON
+  OFF
+  STANDBY
+  ERROR
+}
+
+enum TriggerType {
+  SCHEDULE
+  CONDITION
+  MANUAL
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+  SUCCESS
+}
+
+enum ReportType {
+  ENERGY_CONSUMPTION
+  DEVICE_STATUS
+  ROOM_USAGE
+  INCIDENTS
+}
+
+enum ReportFormat {
+  PDF
+  CSV
+  XLSX
+}
+
+enum ReportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  name       String
+  password   String
+  phone      String?
+  cpf        String?   @unique
+  role       UserRole  @default(VIEWER)
+  avatar     String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // relations
+  notifications Notification[]
+  reports       Report[]
+  automations   Automation[]     @relation("AutomationCreator")
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  tokenHash  String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+model Building {
+  id            String   @id @default(uuid())
+  name          String
+  description   String?
+  location      String
+  totalEnergy   Float?    // kWh aggregated
+  activeDevices Int?     
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  floors Floor[]
+}
+
+model Floor {
+  id          String   @id @default(uuid())
+  building    Building @relation(fields: [buildingId], references: [id])
+  buildingId  String
+  number      Int
+  name        String
+  totalEnergy Float?   // kWh
+  activeDevices Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rooms Room[]
+}
+
+model Room {
+  id         String   @id @default(uuid())
+  floor      Floor    @relation(fields: [floorId], references: [id])
+  floorId    String
+  number     String
+  name       String
+  type       RoomType
+  capacity   Int?
+  totalEnergy Float?
+  occupied   Boolean? @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  devices Device[]
+}
+
+model Device {
+  id          String       @id @default(uuid())
+  room        Room         @relation(fields: [roomId], references: [id])
+  roomId      String
+  name        String
+  type        DeviceType
+  status      DeviceStatus
+  mqttTopic   String
+  powerRating Float?       // Watts
+  intensity   Int?         // 0-100
+  temperature Float?       // For AC
+  online      Boolean      @default(false)
+  lastSeen    DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  readings    EnergyReading[]
+}
+
+model EnergyReading {
+  id         String   @id @default(uuid())
+  device     Device   @relation(fields: [deviceId], references: [id])
+  deviceId   String
+  timestamp  DateTime
+  voltage    Float
+  current    Float
+  power      Float
+  energy     Float   // kWh
+  powerFactor Float?
+
+  @@index([deviceId, timestamp])
+}
+
+model Automation {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  enabled     Boolean  @default(true)
+  triggerType TriggerType
+  // trigger/config/actions stored as JSON for flexibility
+  trigger     Json
+  actions     Json
+  createdBy   User     @relation("AutomationCreator", fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastRun     DateTime?
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  user      User             @relation(fields: [userId], references: [id])
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+}
+
+model Report {
+  id         String      @id @default(uuid())
+  type       ReportType
+  title      String
+  format     ReportFormat
+  filters    Json
+  status     ReportStatus @default(PENDING)
+  fileUrl    String?
+  createdBy  User         @relation(fields: [createdById], references: [id])
+  createdById String
+  createdAt  DateTime     @default(now())
+}
