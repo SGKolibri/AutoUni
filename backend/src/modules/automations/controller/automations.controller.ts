@@ -11,6 +11,7 @@ import {
   HttpStatus,
   ParseUUIDPipe,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -26,9 +27,11 @@ import {
   UpdateAutomationDto,
   ToggleAutomationDto,
 } from '../dto/automations.dto';
+import { AuthGuard } from '../../../guards/auth.guard';
 
+@UseGuards(AuthGuard)
+@ApiBearerAuth('JWT-auth')
 @ApiTags('Automations')
-@ApiBearerAuth()
 @Controller('automations')
 export class AutomationsController {
   constructor(private readonly automationsService: AutomationsService) {}

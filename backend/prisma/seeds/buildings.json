@@ -1,0 +1,157 @@
+[
+  {
+    "name": "Bloco A - Engenharia",
+    "description": "Prédio principal de Engenharia com salas de aula e laboratórios",
+    "location": "Campus Central - Setor Norte",
+    "floors": [
+      {
+        "number": 1,
+        "name": "Térreo",
+        "rooms": [
+          {
+            "name": "Sala A101",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Sala A102",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Lab. Informática A103",
+            "type": "LAB"
+          },
+          {
+            "name": "Auditório A104",
+            "type": "AUDITORIUM"
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "name": "Primeiro Andar",
+        "rooms": [
+          {
+            "name": "Sala A201",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Sala A202",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Lab. Eletrônica A203",
+            "type": "LAB"
+          },
+          {
+            "name": "Sala Professores A204",
+            "type": "OFFICE"
+          }
+        ]
+      },
+      {
+        "number": 3,
+        "name": "Segundo Andar",
+        "rooms": [
+          {
+            "name": "Sala A301",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Lab. Robótica A302",
+            "type": "LAB"
+          },
+          {
+            "name": "Coordenação A303",
+            "type": "OFFICE"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bloco B - Ciências Humanas",
+    "description": "Prédio de Ciências Humanas e Sociais",
+    "location": "Campus Central - Setor Sul",
+    "floors": [
+      {
+        "number": 1,
+        "name": "Térreo",
+        "rooms": [
+          {
+            "name": "Sala B101",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Sala B102",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Biblioteca B103",
+            "type": "LIBRARY"
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "name": "Primeiro Andar",
+        "rooms": [
+          {
+            "name": "Sala B201",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Sala B202",
+            "type": "CLASSROOM"
+          },
+          {
+            "name": "Sala Professores B203",
+            "type": "OFFICE"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bloco C - Administração",
+    "description": "Prédio administrativo da universidade",
+    "location": "Campus Central - Setor Administrativo",
+    "floors": [
+      {
+        "number": 1,
+        "name": "Térreo",
+        "rooms": [
+          {
+            "name": "Recepção C101",
+            "type": "OFFICE"
+          },
+          {
+            "name": "Secretaria C102",
+            "type": "OFFICE"
+          },
+          {
+            "name": "Tesouraria C103",
+            "type": "OFFICE"
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "name": "Primeiro Andar",
+        "rooms": [
+          {
+            "name": "Reitoria C201",
+            "type": "OFFICE"
+          },
+          {
+            "name": "Sala Reuniões C202",
+            "type": "OTHER"
+          },
+          {
+            "name": "Auditório C203",
+            "type": "AUDITORIUM"
+          }
+        ]
+      }
+    ]
+  }
+]

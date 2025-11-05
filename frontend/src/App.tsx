@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
@@ -23,33 +23,64 @@ const queryClient = new QueryClient({
 function App() {
   const setUser = useAuthStore((state) => state.setUser);
   const setTokens = useAuthStore((state) => state.setTokens);
+  const setLoading = useAuthStore((state) => state.setLoading);
+  const hasRestoredSession = useRef(false);
 
-  // Verifica se há token armazenado e restaura a sessão
+  // Verifica se há token armazenado e restaura a sessão (apenas uma vez)
   useEffect(() => {
     const restoreSession = async () => {
+      // Evita executar múltiplas vezes
+      if (hasRestoredSession.current) {
+        return;
+      }
+      hasRestoredSession.current = true;
+
       const accessToken = localStorage.getItem("accessToken");
       const refreshToken = localStorage.getItem("refreshToken");
+      const storedUser = localStorage.getItem("user");
 
       if (accessToken && refreshToken) {
+        // Primeiro, tenta restaurar do localStorage (mais rápido)
+        if (storedUser) {
+          try {
+            const user = JSON.parse(storedUser);
+            console.log("✅ Sessão restaurada do localStorage:", user);
+            setUser(user);
+            setTokens({ accessToken, refreshToken });
+            setLoading(false);
+            return;
+          } catch (e) {
+            console.warn("⚠️ Erro ao parsear usuário do localStorage:", e);
+          }
+        }
+
+        // Se não tem no localStorage, busca da API
         try {
-          // Busca dados do usuário atual
           const response = await apiService.get<User>("/auth/me");
-          setUser(response.data)
+          console.log("✅ Sessão restaurada da API:", response.data);
+          setUser(response.data);
           setTokens({ accessToken, refreshToken });
-        } catch {
+          localStorage.setItem('user', JSON.stringify(response.data));
+        } catch (error) {
           // Token inválido, limpa storage
+          console.error("❌ Erro ao restaurar sessão:", error);
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
           setUser(null);
           setTokens(null);
         }
       } else {
+        console.log("ℹ️ Nenhum token encontrado");
         setUser(null);
       }
+      
+      // Importante: sempre define loading como false após verificar
+      setLoading(false);
     };
 
     restoreSession();
-  }, [setUser, setTokens]);
+  }, [setUser, setTokens, setLoading]);
 
   return (
     <QueryClientProvider client={queryClient}>

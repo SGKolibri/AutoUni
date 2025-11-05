@@ -55,9 +55,9 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @ApiBearerAuth('JWT-auth')
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Realiza o logout do usuário' })
   @ApiResponse({ status: 200, description: 'Logout realizado com sucesso.' })
   @ApiResponse({ status: 401, description: 'Não autorizado.' })

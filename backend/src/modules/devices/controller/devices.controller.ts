@@ -9,6 +9,7 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,12 +17,16 @@ import {
   ApiResponse,
   ApiParam,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { DevicesService } from '../service/devices.service';
 import { CreateDeviceDto } from '../dto/create-device.dto';
 import { UpdateDeviceDto } from '../dto/update-device.dto';
 import { DeviceStatus } from '../interfaces/devices.interface';
+import { AuthGuard } from '../../../guards/auth.guard';
 
+@UseGuards(AuthGuard)
+@ApiBearerAuth('JWT-auth')
 @ApiTags('Devices')
 @Controller('devices')
 export class DevicesController {

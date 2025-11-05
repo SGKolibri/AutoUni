@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -24,9 +25,11 @@ import {
   EnergyStatsDto,
   CleanupReadingsDto,
 } from '../dto/energy.dto';
+import { AuthGuard } from '../../../guards/auth.guard';
 
+@UseGuards(AuthGuard)
+@ApiBearerAuth('JWT-auth')
 @ApiTags('Energy')
-@ApiBearerAuth()
 @Controller('energy')
 export class EnergyController {
   constructor(private readonly energyService: EnergyService) {}

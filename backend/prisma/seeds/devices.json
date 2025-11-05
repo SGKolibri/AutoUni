@@ -1,0 +1,185 @@
+[
+  {
+    "roomName": "Sala A101",
+    "devices": [
+      {
+        "name": "Lâmpada LED Principal A101",
+        "type": "LIGHT",
+        "status": "OFF",
+        "mqttTopic": "devices/light-a101-main",
+        "metadata": {
+          "power": "40W",
+          "brand": "Philips",
+          "model": "LED 40W"
+        }
+      },
+      {
+        "name": "Ar Condicionado A101",
+        "type": "AC",
+        "status": "OFF",
+        "mqttTopic": "devices/ac-a101",
+        "metadata": {
+          "power": "12000 BTU",
+          "brand": "LG",
+          "model": "Dual Inverter"
+        }
+      },
+      {
+        "name": "Projetor A101",
+        "type": "PROJECTOR",
+        "status": "OFF",
+        "mqttTopic": "devices/projector-a101",
+        "metadata": {
+          "resolution": "1920x1080",
+          "brand": "Epson",
+          "model": "PowerLite X49"
+        }
+      }
+    ]
+  },
+  {
+    "roomName": "Lab. Informática A103",
+    "devices": [
+      {
+        "name": "Lâmpada LED Lab A103-1",
+        "type": "LIGHT",
+        "status": "OFF",
+        "mqttTopic": "devices/light-a103-1"
+      },
+      {
+        "name": "Lâmpada LED Lab A103-2",
+        "type": "LIGHT",
+        "status": "OFF",
+        "mqttTopic": "devices/light-a103-2"
+      },
+      {
+        "name": "Ar Condicionado Lab A103",
+        "type": "AC",
+        "status": "OFF",
+        "mqttTopic": "devices/ac-a103",
+        "metadata": {
+          "power": "18000 BTU",
+          "brand": "Samsung"
+        }
+      },
+      {
+        "name": "Sensor Presença A103",
+        "type": "SENSOR",
+        "status": "ON",
+        "mqttTopic": "devices/sensor-presence-a103",
+        "metadata": {
+          "type": "PIR",
+          "range": "8m"
+        }
+      }
+    ]
+  },
+  {
+    "roomName": "Auditório A104",
+    "devices": [
+      {
+        "name": "Sistema Som A104",
+        "type": "SPEAKER",
+        "status": "OFF",
+        "mqttTopic": "devices/speaker-a104",
+        "metadata": {
+          "power": "500W",
+          "channels": "5.1"
+        }
+      },
+      {
+        "name": "Projetor Principal A104",
+        "type": "PROJECTOR",
+        "status": "OFF",
+        "mqttTopic": "devices/projector-a104",
+        "metadata": {
+          "resolution": "4K",
+          "brand": "Sony"
+        }
+      },
+      {
+        "name": "Iluminação Palco A104",
+        "type": "LIGHT",
+        "status": "OFF",
+        "mqttTopic": "devices/light-stage-a104"
+      }
+    ]
+  },
+  {
+    "roomName": "Lab. Eletrônica A203",
+    "devices": [
+      {
+        "name": "Lâmpada LED A203",
+        "type": "LIGHT",
+        "status": "OFF",
+        "mqttTopic": "devices/light-a203"
+      },
+      {
+        "name": "Ar Condicionado A203",
+        "type": "AC",
+        "status": "OFF",
+        "mqttTopic": "devices/ac-a203"
+      },
+      {
+        "name": "Sensor Temperatura A203",
+        "type": "SENSOR",
+        "status": "ON",
+        "mqttTopic": "devices/sensor-temp-a203",
+        "metadata": {
+          "type": "Temperature/Humidity",
+          "range": "-10°C to 50°C"
+        }
+      }
+    ]
+  },
+  {
+    "roomName": "Biblioteca B103",
+    "devices": [
+      {
+        "name": "Iluminação Geral B103",
+        "type": "LIGHT",
+        "status": "ON",
+        "mqttTopic": "devices/light-b103-main"
+      },
+      {
+        "name": "Ar Condicionado Central B103",
+        "type": "AC",
+        "status": "ON",
+        "mqttTopic": "devices/ac-b103",
+        "metadata": {
+          "power": "24000 BTU"
+        }
+      },
+      {
+        "name": "Fechadura Inteligente B103",
+        "type": "LOCK",
+        "status": "OFF",
+        "mqttTopic": "devices/lock-b103",
+        "metadata": {
+          "type": "Smart Lock",
+          "brand": "Yale"
+        }
+      }
+    ]
+  },
+  {
+    "roomName": "Reitoria C201",
+    "devices": [
+      {
+        "name": "Ar Condicionado Split C201",
+        "type": "AC",
+        "status": "OFF",
+        "mqttTopic": "devices/ac-c201",
+        "metadata": {
+          "power": "9000 BTU"
+        }
+      },
+      {
+        "name": "Iluminação Escritório C201",
+        "type": "LIGHT",
+        "status": "OFF",
+        "mqttTopic": "devices/light-c201"
+      }
+    ]
+  }
+]

@@ -6,12 +6,7 @@ import {
   TrendingUpOutlined,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
-import apiService from '@services/api';
-import { useWebSocket } from '@hooks/useWebSocket';
-import KPICard from '@components/common/KPICard';
-import EnergyChart from '@components/charts/EnergyChart';
-import DeviceStatusChart from '@components/charts/DeviceStatusChart';
-import BuildingsList from './components/BuildingsList';
+import KPICard from 'src/components/common/KPICard';
 
 const DashboardPage = () => {
   // Inicializa WebSocket para atualizações em tempo real
