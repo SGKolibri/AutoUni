@@ -159,10 +159,9 @@ const AutomationsPage = () => {
           </Button>
         </Paper>
       ) : (
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {automations?.map((automation) => (
-            <Grid item xs={12} md={6} lg={4} key={automation.id}>
-              <Card>
+            <Card key={automation.id} sx={{ width: '100%' }}>
                 <CardContent>
                   {/* Header */}
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -243,9 +242,8 @@ const AutomationsPage = () => {
                   </IconButton>
                 </CardActions>
               </Card>
-            </Grid>
           ))}
-        </Grid>
+        </Box>
       )}
 
       {/* Create/Edit Dialog */}

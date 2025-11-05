@@ -181,10 +181,10 @@ const LoginPage = () => {
               Credenciais de Demonstração:
             </Typography>
             <Typography variant="caption" display="block">
-              E-mail: admin@autouni.com
+              E-mail: admin@autouni.edu.br
             </Typography>
             <Typography variant="caption" display="block">
-              Senha: admin123
+              Senha: Admin@123
             </Typography>
           </Box>
         </CardContent>
