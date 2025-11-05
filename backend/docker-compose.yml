@@ -1,22 +1,37 @@
-version: "3.8"
 services:
   db:
     image: postgres:15
     container_name: autoUniPostgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Fahrenheit451
+      POSTGRES_DB: autouni
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d autouni"]
       interval: 5s
       timeout: 5s
       retries: 10
     ports:
-      - "${POSTGRES_PORT:-5433}:5432"
+      - "5433:5432"
+    networks:
+      - autouni-network
+
+  mqtt:
+    image: eclipse-mosquitto:latest
+    container_name: autoUniMqtt
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mqtt-data:/mosquitto/data
+      - mqtt-logs:/mosquitto/log
+    networks:
+      - autouni-network
+    command: mosquitto -c /mosquitto-no-auth.conf
 
   app:
     build:
@@ -27,20 +42,33 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    env_file:
-      - .env
+      mqtt:
+        condition: service_started
     environment:
       NODE_ENV: production
       # Dentro do container, a DB é acessível pelo hostname do serviço Docker (db) e porta interna 5432
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB}?schema=public"
+      DATABASE_URL: "postgresql://postgres:Fahrenheit451@db:5432/autouni?schema=public"
+      # MQTT dentro do container usa o hostname do serviço (mqtt)
+      MQTT_URL: "mqtt://mqtt:1883"
+      PORT: 3000
+      JWT_SECRET: eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTc2MDY0MzAxMSwiaWF0IjoxNzYwNjQzMDExfQ.5zsawq52QQZm_sWsO2nVHnMh-9GUAs0uTi1DQQMpoVQ
+      ROOT_EMAIL: samuelcustodioes@gmail.com
+      ROOT_PASSWORD: Fahrenheit451
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: samuelcustodioes@gmail.com
+      SMTP_PASS: "zzda ifba glci rehu"
+      SMTP_FROM: samuelcustodioes@gmail.com
     ports:
       - "3000:3000"
-    volumes:
-      - ./:/usr/src/app:ro
-    # evita reiniciar automático se entrypoint falhar repetidamente
-    deploy:
-      restart_policy:
-        condition: on-failure
+    networks:
+      - autouni-network
 
 volumes:
   pgdata:
+  mqtt-data:
+  mqtt-logs:
+
+networks:
+  autouni-network:
+    driver: bridge

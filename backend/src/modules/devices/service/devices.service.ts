@@ -72,11 +72,13 @@ export class DevicesService {
 
   async getDeviceStats() {
     const devices = await this.findAll();
+    const now = new Date();
+    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
     
     return {
       total: devices.length,
-      online: devices.filter(d => d.online).length,
-      offline: devices.filter(d => !d.online).length,
+      online: devices.filter(d => d.lastSeen && d.lastSeen > fiveMinutesAgo).length,
+      offline: devices.filter(d => !d.lastSeen || d.lastSeen <= fiveMinutesAgo).length,
       byStatus: {
         on: devices.filter(d => d.status === 'ON').length,
         off: devices.filter(d => d.status === 'OFF').length,

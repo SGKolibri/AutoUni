@@ -4,8 +4,10 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// ...existing code...
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -80,31 +82,31 @@ enum ReportStatus {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
-  name       String
-  password   String
-  phone      String?
-  cpf        String?   @unique
-  role       UserRole  @default(VIEWER)
-  avatar     String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  phone     String?
+  cpf       String?  @unique
+  role      UserRole @default(VIEWER)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // relations
   notifications Notification[]
   reports       Report[]
-  automations   Automation[]     @relation("AutomationCreator")
+  automations   Automation[]   @relation("AutomationCreator")
   refreshTokens RefreshToken[]
 }
 
 model RefreshToken {
-  id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  tokenHash  String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 model Building {
@@ -112,8 +114,8 @@ model Building {
   name          String
   description   String?
   location      String
-  totalEnergy   Float?    // kWh aggregated
-  activeDevices Int?     
+  totalEnergy   Float? // kWh aggregated
+  activeDevices Int?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -121,82 +123,80 @@ model Building {
 }
 
 model Floor {
-  id          String   @id @default(uuid())
-  building    Building @relation(fields: [buildingId], references: [id])
-  buildingId  String
-  number      Int
-  name        String
-  totalEnergy Float?   // kWh
-  activeDevices Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  building   Building @relation(fields: [buildingId], references: [id])
+  buildingId String
+  number     Int
+  name       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   rooms Room[]
 }
 
 model Room {
-  id         String   @id @default(uuid())
-  floor      Floor    @relation(fields: [floorId], references: [id])
-  floorId    String
-  number     String
-  name       String
-  type       RoomType
-  capacity   Int?
-  totalEnergy Float?
-  occupied   Boolean? @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  floor     Floor    @relation(fields: [floorId], references: [id])
+  floorId   String
+  name      String
+  type      RoomType @default(OTHER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   devices Device[]
 }
 
 model Device {
-  id          String       @id @default(uuid())
-  room        Room         @relation(fields: [roomId], references: [id])
-  roomId      String
-  name        String
-  type        DeviceType
-  status      DeviceStatus
-  mqttTopic   String
-  powerRating Float?       // Watts
-  intensity   Int?         // 0-100
-  temperature Float?       // For AC
-  online      Boolean      @default(false)
-  lastSeen    DateTime?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id        String       @id @default(uuid())
+  name      String
+  room      Room         @relation(fields: [roomId], references: [id])
+  roomId    String
+  type      DeviceType   @default(OTHER)
+  status    DeviceStatus @default(OFF)
+  mqttTopic String?
+  metadata  Json?
+  lastSeen  DateTime?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
-  readings    EnergyReading[]
+  readings EnergyReading[]
 }
 
 model EnergyReading {
-  id         String   @id @default(uuid())
-  device     Device   @relation(fields: [deviceId], references: [id])
-  deviceId   String
-  timestamp  DateTime
-  voltage    Float
-  current    Float
-  power      Float
-  energy     Float   // kWh
-  powerFactor Float?
-
-  @@index([deviceId, timestamp])
+  id        String   @id @default(uuid())
+  device    Device   @relation(fields: [deviceId], references: [id])
+  deviceId  String
+  valueWh   Float // Wh (or watts at moment depending source)
+  voltage   Float?
+  current   Float?
+  timestamp DateTime @default(now())
 }
 
 model Automation {
-  id          String   @id @default(uuid())
+  id          String      @id @default(uuid())
   name        String
   description String?
-  enabled     Boolean  @default(true)
-  triggerType TriggerType
-  // trigger/config/actions stored as JSON for flexibility
-  trigger     Json
-  actions     Json
-  createdBy   User     @relation("AutomationCreator", fields: [createdById], references: [id])
-  createdById String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  lastRun     DateTime?
+  creator     User?       @relation("AutomationCreator", fields: [creatorId], references: [id])
+  creatorId   String?
+  triggerType TriggerType @default(MANUAL)
+  cron        String? // for SCHEDULE triggers (cron expression)
+  condition   String? // JSON or simple expression for CONDITION triggers (left flexible)
+  action      String // JSON describing action e.g. { "topic": "devices/abc/command", "payload": {"state":"ON"} }
+  enabled     Boolean     @default(true)
+  lastRunAt   DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  history AutomationHistory[]
+}
+
+model AutomationHistory {
+  id           String     @id @default(uuid())
+  automation   Automation @relation(fields: [automationId], references: [id])
+  automationId String
+  runAt        DateTime   @default(now())
+  success      Boolean
+  logs         String?
 }
 
 model Notification {
@@ -212,14 +212,14 @@ model Notification {
 }
 
 model Report {
-  id         String      @id @default(uuid())
-  type       ReportType
-  title      String
-  format     ReportFormat
-  filters    Json
-  status     ReportStatus @default(PENDING)
-  fileUrl    String?
-  createdBy  User         @relation(fields: [createdById], references: [id])
+  id          String       @id @default(uuid())
+  type        ReportType
+  title       String
+  format      ReportFormat
+  filters     Json
+  status      ReportStatus @default(PENDING)
+  fileUrl     String?
+  createdBy   User         @relation(fields: [createdById], references: [id])
   createdById String
-  createdAt  DateTime     @default(now())
+  createdAt   DateTime     @default(now())
 }

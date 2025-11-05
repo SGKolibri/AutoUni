@@ -157,8 +157,8 @@ export class DevicesRepository implements IDeviceRepository {
     return this.prisma.device.update({
       where: { id },
       data: {
-        online,
         lastSeen: new Date(),
+        // online status is inferred from lastSeen timestamp
       },
     });
   }

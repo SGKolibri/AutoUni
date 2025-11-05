@@ -1,46 +1,67 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { LoginDto } from '../dto/auth.dto';
+import { RegisterDto } from '../dto/register.dto';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { AuthGuard } from '../../../guards/auth.guard';
+import { Public } from '../decorators/public.decorator';
+import { RefreshTokenDto } from '../dto/refresh-token.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
-@UseGuards(AuthGuard)
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Realiza o login do usuário' })
   @ApiResponse({ status: 200, description: 'Login realizado com sucesso.' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: { type: 'string', example: 'user@example.com' },
-        senha: { type: 'string', example: 'senha123' },
-      },
-    },
-  })
-  async login(@Body() loginDto: { email: string; senha: string }) {
-    return this.authService.login(loginDto.email, loginDto.senha);
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas.' })
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
   }
 
+  @Public()
   @Post('register')
   @ApiOperation({ summary: 'Registra um novo usuário' })
   @ApiResponse({ status: 201, description: 'Usuário registrado com sucesso.' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        nome: { type: 'string', example: 'Nome do Usuário' },
-        email: { type: 'string', example: 'user@example.com' },
-        senha: { type: 'string', example: 'senha123' },
-        telefone: { type: 'string', example: '+55 62 91234-5678' },
-        cpf: { type: 'string', example: '12345678901' },
-      },
-    },
-  })
-  async register(@Body() registerDto: CreateUserDto) {
+  @ApiResponse({ status: 409, description: 'Email ou CPF já cadastrado.' })
+  async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
+  }
+
+  @Public()
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Renova o token de acesso' })
+  @ApiResponse({ status: 200, description: 'Token renovado com sucesso.' })
+  @ApiResponse({ status: 401, description: 'Token inválido ou expirado.' })
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(refreshTokenDto.refreshToken);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Realiza o logout do usuário' })
+  @ApiResponse({ status: 200, description: 'Logout realizado com sucesso.' })
+  @ApiResponse({ status: 401, description: 'Não autorizado.' })
+  async logout(@Request() req: any) {
+    return this.authService.logout(req.user.sub);
   }
 }

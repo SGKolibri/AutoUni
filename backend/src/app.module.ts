@@ -5,9 +5,12 @@ import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { RealtimeGateway } from './modules/realtime/realtime.gateway';
+import { RealtimeModule } from './modules/realtime/realtime.module';
 import { PrismaService } from 'prisma/prisma.service';
 import { DevicesModule } from './modules/devices/devices.module';
+import { MqttModule } from './modules/mqtt/mqtt.module';
+import { EnergyModule } from './modules/energy/energy.module';
+import { AutomationsModule } from './modules/automations/automations.module';
 
 @Module({
   imports: [
@@ -16,12 +19,16 @@ import { DevicesModule } from './modules/devices/devices.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
+    EventEmitterModule.forRoot(),
+    RealtimeModule,
     UserModule,
     AuthModule,
     DevicesModule,
-    EventEmitterModule.forRoot(),
+    MqttModule,
+    EnergyModule,
+    AutomationsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, RealtimeGateway],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

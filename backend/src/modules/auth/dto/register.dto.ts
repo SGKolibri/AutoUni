@@ -5,11 +5,12 @@ import {
   IsOptional,
   IsString,
   Matches,
+  MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserRole } from '../interfaces/user.interface';
+import { UserRole } from '@prisma/client';
 
-export class CreateUserDto {
+export class RegisterDto {
   @ApiProperty({ example: 'João da Silva' })
   @IsNotEmpty()
   @IsString()
@@ -20,28 +21,29 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @ApiPropertyOptional({ enum: UserRole, default: UserRole.VIEWER })
-  @IsOptional()
-  @IsEnum(UserRole)
-  role?: UserRole;
-
-  @ApiPropertyOptional({ minLength: 6 })
-  @IsOptional()
+  @ApiProperty({ example: 'password123', minLength: 6 })
+  @IsNotEmpty()
   @IsString()
+  @MinLength(6)
   password: string;
 
-  @ApiProperty({ example: '+55 11 91234-5678' })
+  @ApiPropertyOptional({ example: '+55 11 91234-5678' })
   @IsOptional()
   @IsString()
   phone?: string;
 
-  @ApiProperty({ example: '12345678901', description: '11 dígitos' })
+  @ApiPropertyOptional({ example: '12345678901', description: '11 dígitos' })
   @IsOptional()
   @IsString()
   @Matches(/^\d{11}$/, {
     message: 'cpf deve ter 11 dígitos numéricos sem pontos',
   })
   cpf?: string;
+
+  @ApiPropertyOptional({ enum: UserRole, default: UserRole.VIEWER })
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
 
   @ApiPropertyOptional({ example: 'http://example.com/avatar.jpg' })
   @IsOptional()
