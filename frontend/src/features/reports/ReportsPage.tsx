@@ -159,19 +159,35 @@ const ReportsPage = () => {
   return (
     <Box>
       {/* Header */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" fontWeight={600} gutterBottom>
+      <Box sx={{ mb: 4 }}>
+        <Typography 
+          variant="h4" 
+          fontWeight={700} 
+          gutterBottom
+          sx={{ 
+            background: 'linear-gradient(135deg, #1F2937 0%, #374151 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
           Relatórios
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary" fontWeight={500}>
           Gere relatórios personalizados sobre consumo, dispositivos e utilização
         </Typography>
       </Box>
 
       {/* Report Types */}
-      <Typography variant="h6" fontWeight={600} gutterBottom>
-        Tipos de Relatório
-      </Typography>
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h5" fontWeight={700} gutterBottom>
+            Tipos de Relatório
+          </Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>
+            Selecione o tipo de relatório que deseja gerar
+          </Typography>
+        </Box>
+      </Box>
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {reportTypes.map((reportType) => (
@@ -179,10 +195,11 @@ const ReportsPage = () => {
             <Card
               sx={{
                 height: '100%',
-                transition: 'transform 0.3s',
+                borderRadius: 3,
+                transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 4,
+                  borderColor: 'primary.main',
+                  transform: 'translateY(-2px)',
                 },
               }}
             >
@@ -190,7 +207,7 @@ const ReportsPage = () => {
                 onClick={() => handleSelectType(reportType.type)}
                 sx={{ height: '100%' }}
               >
-                <CardContent>
+                <CardContent sx={{ p: 3 }}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -206,10 +223,10 @@ const ReportsPage = () => {
                   >
                     {reportType.icon}
                   </Box>
-                  <Typography variant="h6" fontWeight={600} gutterBottom>
+                  <Typography variant="h6" fontWeight={700} gutterBottom>
                     {reportType.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" fontWeight={500}>
                     {reportType.description}
                   </Typography>
                 </CardContent>
@@ -220,15 +237,21 @@ const ReportsPage = () => {
       </Grid>
 
       {/* Recent Reports */}
-      <Paper sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h6" fontWeight={600}>
-            Relatórios Recentes
-          </Typography>
+      <Paper sx={{ p: 4, borderRadius: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
+          <Box>
+            <Typography variant="h5" fontWeight={700} gutterBottom>
+              Relatórios Recentes
+            </Typography>
+            <Typography variant="body2" color="text.secondary" fontWeight={500}>
+              Histórico de relatórios gerados
+            </Typography>
+          </Box>
           <Button
             variant="outlined"
             startIcon={<Add />}
             onClick={() => setCreateDialogOpen(true)}
+            sx={{ borderRadius: 2 }}
           >
             Novo Relatório
           </Button>

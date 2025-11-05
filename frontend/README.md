@@ -285,44 +285,165 @@ src/
 
 ## 🎨 Design System
 
+### Filosofia de Design
+
+O AutoUni segue uma filosofia de design **minimalista e profissional**, priorizando:
+- **Clareza visual** com muito espaço em branco
+- **Hierarquia clara** através de tipografia e espaçamento
+- **Azul como cor primária** (confiança e tecnologia)
+- **Vermelho como cor de destaque** (ações importantes)
+- **Bordas sutis** para definição de componentes
+
 ### Paleta de Cores
 
 ```css
-/* Principais */
-Primary:   #1976D2  /* Azul */
-Secondary: #388E3C  /* Verde */
-Success:   #4CAF50
-Warning:   #FF9800
-Error:     #D32F2F
-Info:      #0288D1
+/* Cores Principais */
+Primary Blue:     #2563EB  /* Azul moderno - Ações principais */
+Secondary Red:    #DC2626  /* Vermelho - Alertas e destaque */
 
-/* Neutras */
-Background: #FFFFFF
-Paper:      #F5F5F5
-Divider:    #E0E0E0
-Text:       #212121 / #616161
+/* Cores de Feedback */
+Success Green:    #10B981  /* Sucesso */
+Warning Orange:   #F59E0B  /* Avisos */
+Error Red:        #DC2626  /* Erros */
+Info Blue:        #2563EB  /* Informações */
+
+/* Cores Neutras (Escala de Cinza) */
+Gray 50:          #F9FAFB  /* Background principal */
+Gray 100:         #F3F4F6  /* Background alternativo */
+Gray 200:         #E5E7EB  /* Bordas e divisores */
+Gray 300:         #D1D5DB  /* Bordas hover */
+Gray 500:         #6B7280  /* Texto secundário */
+Gray 800:         #1F2937  /* Texto principal */
+
+/* Backgrounds */
+Background:       #F9FAFB  /* Fundo geral */
+Paper:            #FFFFFF  /* Cards e componentes */
+Border:           #E5E7EB  /* Bordas padrão */
 ```
 
 ### Tipografia
 
-- **Fonte**: Roboto (Google Fonts)
-- **Headings**: Medium/Bold
-- **Body**: Regular
-- **Tamanhos**: h1 (40px) até caption (12px)
+**Fonte Principal**: **Inter** (moderna e profissional)  
+**Fonte Alternativa**: Roboto
 
-### Espaçamento
+```css
+/* Headings */
+h1: 40px / 700 weight / -0.02em letter-spacing
+h2: 32px / 700 weight / -0.01em letter-spacing
+h3: 28px / 600 weight
+h4: 24px / 600 weight
+h5: 20px / 600 weight
+h6: 16px / 600 weight
 
-- Base: 8px (MUI spacing)
-- Cards: 24px padding
-- Gaps: 16px
+/* Body */
+body1: 16px / 400 weight
+body2: 14px / 400 weight
+caption: 12px / 400 weight
 
-### Componentes
+/* Buttons */
+button: 14px / 500 weight / 0.02em letter-spacing
+```
 
-- Cards com hover effect e sombra sutil
-- Botões Material Design com bordas arredondadas
-- Gráficos coloridos e interativos
-- Indicadores visuais claros (online/offline)
-- Loading skeletons em todas as páginas
+### Espaçamento & Layout
+
+```css
+/* Sistema de Espaçamento (base 8px) */
+xs:  4px
+sm:  8px
+md:  16px
+lg:  24px
+xl:  32px
+2xl: 48px
+
+/* Padding de Cards */
+Card Padding: 24px
+
+/* Gaps Padrão */
+Component Gap: 16px
+Section Gap:   32px
+```
+
+### Bordas & Sombras
+
+```css
+/* Border Radius */
+Small:    6px  (Chips, badges)
+Medium:   8px  (Buttons, inputs)
+Large:    12px (Cards, papers, dialogs)
+
+/* Borders */
+Default:  1px solid #E5E7EB
+Hover:    1px solid #D1D5DB
+Focus:    2px solid #2563EB
+
+/* Shadows (Tailwind-inspired) */
+sm:   0 1px 2px rgba(0,0,0,0.05)
+md:   0 4px 6px rgba(0,0,0,0.1)
+lg:   0 10px 15px rgba(0,0,0,0.1)
+xl:   0 20px 25px rgba(0,0,0,0.1)
+```
+
+### Componentes Customizados
+
+#### Cards
+- ✅ Background branco (#FFFFFF)
+- ✅ Borda sutil (1px #E5E7EB)
+- ✅ Border radius 12px
+- ✅ Sombra suave (shadow-sm)
+- ✅ Hover: Sombra média + borda mais escura
+
+#### Buttons
+- ✅ Border radius 8px
+- ✅ Sem text-transform (mantém capitalização)
+- ✅ Font weight 500
+- ✅ Sem sombra por padrão
+- ✅ Hover sutil
+
+#### Inputs (TextField)
+- ✅ Border radius 8px
+- ✅ Background branco
+- ✅ Borda 1.5px (#E5E7EB)
+- ✅ Focus: 2px azul (#2563EB)
+- ✅ Transições suaves
+
+#### Alerts
+- ✅ Border radius 8px
+- ✅ Bordas coloridas (success: verde, error: vermelho)
+- ✅ Backgrounds suaves
+- ✅ Ícones alinhados
+
+#### Tables
+- ✅ Header com background cinza claro (#F9FAFB)
+- ✅ Bordas sutis (#E5E7EB)
+- ✅ Hover row effect
+
+#### Menus & Dropdowns
+- ✅ Border radius 8px
+- ✅ Sombra lg
+- ✅ Items com border radius 6px
+- ✅ Hover/selected states claros
+
+### Princípios de UI
+
+1. **Hierarquia Visual Clara**
+   - Títulos em negrito (600-700)
+   - Espaçamento generoso entre seções
+   - Contraste adequado entre texto e background
+
+2. **Feedback Visual**
+   - Estados hover/focus bem definidos
+   - Transições suaves (200ms)
+   - Loading states e skeletons
+
+3. **Consistência**
+   - Mesmos border radius em componentes similares
+   - Paleta de cores limitada e bem definida
+   - Espaçamento baseado em múltiplos de 8px
+
+4. **Acessibilidade**
+   - Contraste WCAG AA mínimo
+   - Focus indicators visíveis
+   - Tamanhos de toque adequados (min 44x44px)
 
 ---
 

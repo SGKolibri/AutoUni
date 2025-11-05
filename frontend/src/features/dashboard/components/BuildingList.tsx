@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { ChevronRight, Business } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
-import apiService from 'src/services/api';
+import apiService from '@services/api';
 import { Building } from '@types/index';
 
 const BuildingsList = () => {
@@ -88,7 +88,11 @@ const BuildingsList = () => {
               </TableCell>
               <TableCell align="center">
                 <Chip
-                  label={building.activeDevices || 0}
+                  label={building.floors?.reduce((accFloor, floor) => {
+                    return accFloor + (floor.rooms?.reduce((accRoom, room) => {
+                      return accRoom + (room.devices?.filter(d => d.status === 'ON').length || 0);
+                    }, 0) || 0);
+                  }, 0) || 0}
                   size="small"
                   color="success"
                 />

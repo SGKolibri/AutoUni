@@ -102,7 +102,7 @@ model User {
 
 model RefreshToken {
   id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   tokenHash String
   expiresAt DateTime
@@ -124,7 +124,7 @@ model Building {
 
 model Floor {
   id         String   @id @default(uuid())
-  building   Building @relation(fields: [buildingId], references: [id])
+  building   Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
   buildingId String
   number     Int
   name       String?
@@ -136,7 +136,7 @@ model Floor {
 
 model Room {
   id        String   @id @default(uuid())
-  floor     Floor    @relation(fields: [floorId], references: [id])
+  floor     Floor    @relation(fields: [floorId], references: [id], onDelete: Cascade)
   floorId   String
   name      String
   type      RoomType @default(OTHER)
@@ -149,7 +149,7 @@ model Room {
 model Device {
   id        String       @id @default(uuid())
   name      String
-  room      Room         @relation(fields: [roomId], references: [id])
+  room      Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
   roomId    String
   type      DeviceType   @default(OTHER)
   status    DeviceStatus @default(OFF)
@@ -164,7 +164,7 @@ model Device {
 
 model EnergyReading {
   id        String   @id @default(uuid())
-  device    Device   @relation(fields: [deviceId], references: [id])
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId  String
   valueWh   Float // Wh (or watts at moment depending source)
   voltage   Float?
@@ -176,7 +176,7 @@ model Automation {
   id          String      @id @default(uuid())
   name        String
   description String?
-  creator     User?       @relation("AutomationCreator", fields: [creatorId], references: [id])
+  creator     User?       @relation("AutomationCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId   String?
   triggerType TriggerType @default(MANUAL)
   cron        String? // for SCHEDULE triggers (cron expression)
@@ -192,7 +192,7 @@ model Automation {
 
 model AutomationHistory {
   id           String     @id @default(uuid())
-  automation   Automation @relation(fields: [automationId], references: [id])
+  automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
   automationId String
   runAt        DateTime   @default(now())
   success      Boolean
@@ -201,7 +201,7 @@ model AutomationHistory {
 
 model Notification {
   id        String           @id @default(uuid())
-  user      User             @relation(fields: [userId], references: [id])
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   type      NotificationType
   title     String
@@ -219,7 +219,7 @@ model Report {
   filters     Json
   status      ReportStatus @default(PENDING)
   fileUrl     String?
-  createdBy   User         @relation(fields: [createdById], references: [id])
-  createdById String
+  createdBy   User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdById String?
   createdAt   DateTime     @default(now())
 }

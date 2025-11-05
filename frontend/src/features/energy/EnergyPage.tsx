@@ -19,6 +19,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Skeleton,
 } from '@mui/material';
 import {
   DateRange,
@@ -43,7 +44,7 @@ const EnergyPage = () => {
   const [level, setLevel] = useState<Level>('general');
   const [selectedId, setSelectedId] = useState<string>('');
 
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: isLoadingStats } = useQuery({
     queryKey: ['energy', 'stats', period, level, selectedId],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -58,7 +59,7 @@ const EnergyPage = () => {
     },
   });
 
-  const { data: chartData } = useQuery({
+  const { data: chartData, isLoading: isLoadingChart } = useQuery({
     queryKey: ['energy', 'chart', period, level, selectedId],
     queryFn: async () => {
       const response = await apiService.get(`/energy/history?period=${period}&level=${level}&id=${selectedId}`);
@@ -173,96 +174,115 @@ const EnergyPage = () => {
       </Paper>
 
       {/* KPI Cards */}
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <BoltOutlined sx={{ fontSize: 40, color: 'warning.main', mr: 2 }} />
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Consumo Total
-                  </Typography>
-                  <Typography variant="h5" fontWeight={700}>
-                    {stats?.totalEnergy.toFixed(2) || '0.00'} kWh
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="caption" color="text.secondary" gutterBottom>
-                Custo Estimado
-              </Typography>
-              <Typography variant="h5" fontWeight={700} color="error.main" gutterBottom>
-                R$ {stats?.totalCost.toFixed(2) || '0.00'}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Tarifa: R$ 0,85/kWh
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="caption" color="text.secondary" gutterBottom>
-                Pico de Demanda
-              </Typography>
-              <Typography variant="h5" fontWeight={700} gutterBottom>
-                {stats?.peakDemand.toFixed(0) || '0'} W
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Máximo registrado
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="caption" color="text.secondary" gutterBottom>
-                Potência Média
-              </Typography>
-              <Typography variant="h5" fontWeight={700} gutterBottom>
-                {stats?.averagePower.toFixed(0) || '0'} W
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                <TrendingDown sx={{ fontSize: 16, color: 'success.main', mr: 0.5 }} />
-                <Typography variant="caption" color="success.main" fontWeight={600}>
-                  -12.5% vs mês anterior
+      {isLoadingStats ? (
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: 3,
+            mb: 3,
+          }}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <Box key={i} sx={{ flex: 1, minWidth: 0 }}>
+              <Skeleton variant="rectangular" height={120} sx={{ borderRadius: 2 }} />
+            </Box>
+          ))}
+        </Box>
+      ) : (
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 3,
+          mb: 3,
+        }}
+      >
+        <Card sx={{ flex: 1, minWidth: { xs: '100%', sm: 275 } }}>
+          <CardContent>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <BoltOutlined sx={{ fontSize: 40, color: 'warning.main', mr: 2 }} />
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Consumo Total
+                </Typography>
+                <Typography variant="h5" fontWeight={700}>
+                  {stats?.totalEnergy.toFixed(2) || '0.00'} kWh
                 </Typography>
               </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={{ flex: 1, minWidth: { xs: '100%', sm: 275 } }}>
+          <CardContent>
+            <Typography variant="caption" color="text.secondary" gutterBottom>
+              Custo Estimado
+            </Typography>
+            <Typography variant="h5" fontWeight={700} color="error.main" gutterBottom>
+              R$ {stats?.totalCost.toFixed(2) || '0.00'}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Tarifa: R$ 0,85/kWh
+            </Typography>
+          </CardContent>
+        </Card>
+
+        <Card sx={{ flex: 1, minWidth: { xs: '100%', sm: 275 } }}>
+          <CardContent>
+            <Typography variant="caption" color="text.secondary" gutterBottom>
+              Pico de Demanda
+            </Typography>
+            <Typography variant="h5" fontWeight={700} gutterBottom>
+              {stats?.peakDemand.toFixed(0) || '0'} W
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Máximo registrado
+            </Typography>
+          </CardContent>
+        </Card>
+
+        <Card sx={{ flex: 1, minWidth: { xs: '100%', sm: 275 } }}>
+          <CardContent>
+            <Typography variant="caption" color="text.secondary" gutterBottom>
+              Potência Média
+            </Typography>
+            <Typography variant="h5" fontWeight={700} gutterBottom>
+              {stats?.averagePower.toFixed(0) || '0'} W
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+              <TrendingDown sx={{ fontSize: 16, color: 'success.main', mr: 0.5 }} />
+              <Typography variant="caption" color="success.main" fontWeight={600}>
+                -12.5% vs mês anterior
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+      )}
 
       {/* Charts Row */}
-      <Grid container spacing={3} sx={{ mb: 3 }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 3, mb: 3 }}>
         {/* Energy Timeline */}
-        <Grid item xs={12} lg={8}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" fontWeight={600} gutterBottom>
-              Histórico de Consumo
-            </Typography>
+        <Paper sx={{ flex: 1, minWidth: 0, p: 3 }}>
+          <Typography variant="h6" fontWeight={600} gutterBottom>
+            Histórico de Consumo
+          </Typography>
+          {isLoadingChart ? (
+            <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 2 }} />
+          ) : (
             <EnergyChart data={chartData} />
-          </Paper>
-        </Grid>
+          )}
+        </Paper>
 
         {/* Device Type Distribution */}
-        <Grid item xs={12} lg={4}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" fontWeight={600} gutterBottom>
-              Consumo por Tipo
-            </Typography>
-            {deviceTypeData.length > 0 ? (
+        <Paper sx={{ flex: 1, minWidth: 0, p: 3, maxWidth: { lg: '400px' } }}>
+          <Typography variant="h6" fontWeight={600} gutterBottom>
+            Consumo por Tipo
+          </Typography>
+          {isLoadingStats ? (
+            <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 2 }} />
+          ) : deviceTypeData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -290,8 +310,7 @@ const EnergyPage = () => {
               </Box>
             )}
           </Paper>
-        </Grid>
-      </Grid>
+      </Box>
 
       {/* Comparison Table */}
       <Paper sx={{ p: 3 }}>

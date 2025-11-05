@@ -24,8 +24,14 @@
     
     "baseUrl": ".",
         "paths": {
+      "@/*": ["src/*"],
       "@types/*": ["src/types/*"],
-      "@store/*": ["src/store/*"] // <-- add this line
+      "@store/*": ["src/store/*"],
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
+      "@features/*": ["src/features/*"]
     }
   },
   "include": ["src"]

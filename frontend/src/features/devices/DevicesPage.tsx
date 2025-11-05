@@ -7,7 +7,6 @@ import {
   InputAdornment,
   Button,
   Chip,
-  IconButton,
   Menu,
   MenuItem,
   Alert,
@@ -23,7 +22,7 @@ import {
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiService from '@services/api';
-import { Device, DeviceStatus, DeviceType } from '@types/index';
+import { Device, DeviceStatus, DeviceType } from '../../types';
 import { useDeviceStore } from '@store/deviceStore';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -36,7 +35,10 @@ const DevicesPage = () => {
   const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
   const [statusFilter, setStatusFilter] = useState<DeviceStatus | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState<DeviceType | 'all'>('all');
-  const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+  const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>({
+    type: 'include',
+    ids: new Set<string>()
+  });
 
   const { data: devices, isLoading, refetch } = useQuery({
     queryKey: ['devices', statusFilter, typeFilter],
@@ -57,7 +59,7 @@ const DevicesPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devices'] });
-      setSelectionModel([]);
+      setRowSelectionModel({ type: 'include', ids: new Set<string>() });
     },
   });
 
@@ -145,14 +147,14 @@ const DevicesPage = () => {
 
   const handleBulkOn = () => {
     bulkControlMutation.mutate({
-      deviceIds: selectionModel as string[],
+      deviceIds: Array.from(rowSelectionModel.ids) as string[],
       command: 'on',
     });
   };
 
   const handleBulkOff = () => {
     bulkControlMutation.mutate({
-      deviceIds: selectionModel as string[],
+      deviceIds: Array.from(rowSelectionModel.ids) as string[],
       command: 'off',
     });
   };
@@ -164,43 +166,56 @@ const DevicesPage = () => {
 
   return (
     <Box>
-      {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4" fontWeight={600} gutterBottom>
-            Dispositivos
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {devices?.length || 0} dispositivos cadastrados
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button
-            variant="outlined"
-            startIcon={<Refresh />}
-            onClick={() => refetch()}
-          >
-            Atualizar
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<FileDownload />}
-            onClick={handleExport}
-          >
-            Exportar
-          </Button>
+      {/* Header Moderno */}
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+          <Box>
+            <Typography 
+              variant="h4" 
+              fontWeight={700}
+              sx={{ 
+                mb: 1,
+                background: 'linear-gradient(135deg, #1F2937 0%, #374151 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Dispositivos
+            </Typography>
+            <Typography variant="body1" color="text.secondary" fontWeight={500}>
+              {devices?.length || 0} dispositivos cadastrados
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="outlined"
+              startIcon={<Refresh />}
+              onClick={() => refetch()}
+              sx={{ borderRadius: 2 }}
+            >
+              Atualizar
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<FileDownload />}
+              onClick={handleExport}
+              sx={{ borderRadius: 2 }}
+            >
+              Exportar
+            </Button>
+          </Box>
         </Box>
       </Box>
 
       {/* Connection Status */}
       {!wsConnected && (
-        <Alert severity="warning" sx={{ mb: 3 }}>
+        <Alert severity="warning" sx={{ mb: 3, borderRadius: 2 }}>
           Conexão WebSocket desconectada. Os status dos dispositivos podem não estar atualizados em tempo real.
         </Alert>
       )}
 
       {/* Filters & Search */}
-      <Paper sx={{ p: 2, mb: 3 }}>
+      <Paper sx={{ p: 3, mb: 3, borderRadius: 3 }}>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField
             placeholder="Buscar dispositivos..."
@@ -268,11 +283,11 @@ const DevicesPage = () => {
       </Paper>
 
       {/* Bulk Actions */}
-      {selectionModel.length > 0 && (
-        <Paper sx={{ p: 2, mb: 3, backgroundColor: 'primary.main', color: 'white' }}>
+      {rowSelectionModel.ids.size > 0 && (
+        <Paper sx={{ p: 3, mb: 3, backgroundColor: 'primary.main', color: 'white', borderRadius: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="body1" fontWeight={600}>
-              {selectionModel.length} dispositivo(s) selecionado(s)
+              {rowSelectionModel.ids.size} dispositivo(s) selecionado(s)
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
@@ -281,6 +296,7 @@ const DevicesPage = () => {
                 startIcon={<PowerSettingsNew />}
                 onClick={handleBulkOn}
                 disabled={bulkControlMutation.isPending}
+                sx={{ borderRadius: 2 }}
               >
                 Ligar Todos
               </Button>
@@ -290,6 +306,7 @@ const DevicesPage = () => {
                 startIcon={<PowerOff />}
                 onClick={handleBulkOff}
                 disabled={bulkControlMutation.isPending}
+                sx={{ borderRadius: 2 }}
               >
                 Desligar Todos
               </Button>
@@ -299,15 +316,17 @@ const DevicesPage = () => {
       )}
 
       {/* Data Grid */}
-      <Paper sx={{ height: 600 }}>
+      <Paper sx={{ height: 600, borderRadius: 3 }}>
         <DataGrid
           rows={filteredDevices}
           columns={columns}
           loading={isLoading}
           checkboxSelection
           disableRowSelectionOnClick
-          rowSelectionModel={selectionModel}
-          onRowSelectionModelChange={(newSelection) => setSelectionModel(newSelection)}
+          rowSelectionModel={rowSelectionModel}
+          onRowSelectionModelChange={(newSelection) => {
+            setRowSelectionModel(newSelection);
+          }}
           pageSizeOptions={[10, 25, 50, 100]}
           initialState={{
             pagination: { paginationModel: { pageSize: 25 } },

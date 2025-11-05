@@ -5,12 +5,13 @@ import axios, {
 } from "axios";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 class ApiService {
   private api: AxiosInstance;
 
   constructor() {
+    console.log("🌐 API Base URL:", API_BASE_URL);
     this.api = axios.create({
       baseURL: API_BASE_URL,
       timeout: 30000,
@@ -70,8 +71,10 @@ class ApiService {
             return this.api(originalRequest);
           } catch (refreshError) {
             // Se falhar, limpa tokens e redireciona para login
+            console.error("❌ Refresh token falhou, redirecionando para /login:", refreshError);
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
             window.location.href = "/login";
             return Promise.reject(refreshError);
           }

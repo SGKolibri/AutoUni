@@ -71,7 +71,7 @@ const AutomationsPage = () => {
 
   const runAutomationMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await apiService.post(`/automations/${id}/run`);
+      const response = await apiService.post(`/automations/${id}/execute`);
       return response.data;
     },
   });
@@ -93,12 +93,17 @@ const AutomationsPage = () => {
     runAutomationMutation.mutate(id);
   };
 
-  const getTriggerLabel = (trigger: Automation['trigger']) => {
-    if (trigger.type === TriggerType.SCHEDULE && trigger.schedule) {
-      return `Agendado: ${trigger.schedule.time} - ${trigger.schedule.days?.join(', ')}`;
+  const getTriggerLabel = (automation: Automation) => {
+    if (automation.triggerType === TriggerType.SCHEDULE && automation.cron) {
+      return `Agendado: ${automation.cron}`;
     }
-    if (trigger.type === TriggerType.CONDITION && trigger.condition) {
-      return `Condição: ${trigger.condition.deviceId} ${trigger.condition.operator} ${trigger.condition.value}`;
+    if (automation.triggerType === TriggerType.CONDITION && automation.condition) {
+      try {
+        const cond = JSON.parse(automation.condition);
+        return `Condição: ${cond.field || ''} ${cond.operator || ''} ${cond.value || ''}`;
+      } catch {
+        return `Condição: ${automation.condition}`;
+      }
     }
     return 'Manual';
   };
@@ -182,42 +187,32 @@ const AutomationsPage = () => {
 
                   {/* Trigger Info */}
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                    {getTriggerIcon(automation.trigger.type)}
+                    {getTriggerIcon(automation.triggerType)}
                     <Typography variant="body2">
-                      {getTriggerLabel(automation.trigger)}
+                      {getTriggerLabel(automation)}
                     </Typography>
                   </Box>
 
                   {/* Actions */}
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" color="text.secondary" gutterBottom>
-                      Ações ({automation.actions.length}):
+                      Ação:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
-                      {automation.actions.slice(0, 3).map((action, index) => (
-                        <Chip
-                          key={index}
-                          label={`${action.command}`}
-                          size="small"
-                          variant="outlined"
-                        />
-                      ))}
-                      {automation.actions.length > 3 && (
-                        <Chip
-                          label={`+${automation.actions.length - 3}`}
-                          size="small"
-                          variant="outlined"
-                        />
-                      )}
+                      <Chip
+                        label={automation.action ? 'Configurada' : 'Não configurada'}
+                        size="small"
+                        variant="outlined"
+                      />
                     </Box>
                   </Box>
 
                   {/* Last Run */}
-                  {automation.lastRun && (
+                  {automation.lastRunAt && (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <AccessTime sx={{ fontSize: 16, color: 'text.secondary' }} />
                       <Typography variant="caption" color="text.secondary">
-                        Última execução: {format(new Date(automation.lastRun), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                        Última execução: {format(new Date(automation.lastRunAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                       </Typography>
                     </Box>
                   )}

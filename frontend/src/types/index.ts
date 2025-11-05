@@ -81,43 +81,38 @@ export interface Device {
   name: string;
   type: DeviceType;
   status: DeviceStatus;
-  mqttTopic: string;
-  powerRating?: number; // Watts
-  intensity?: number; // 0-100 for dimmers
-  temperature?: number; // For AC
-  online: boolean;
-  lastSeen: string;
+  mqttTopic?: string;
+  metadata?: any; // JSON field from Prisma - pode conter brand, power, etc
+  lastSeen?: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export enum DeviceType {
-  LIGHT = 'light',
-  AC = 'ac',
-  PROJECTOR = 'projector',
-  SPEAKER = 'speaker',
-  LOCK = 'lock',
-  SENSOR = 'sensor',
-  OTHER = 'other',
+  LIGHT = 'LIGHT',
+  AC = 'AC',
+  PROJECTOR = 'PROJECTOR',
+  SPEAKER = 'SPEAKER',
+  LOCK = 'LOCK',
+  SENSOR = 'SENSOR',
+  OTHER = 'OTHER',
 }
 
 export enum DeviceStatus {
-  ON = 'on',
-  OFF = 'off',
-  STANDBY = 'standby',
-  ERROR = 'error',
+  ON = 'ON',
+  OFF = 'OFF',
+  STANDBY = 'STANDBY',
+  ERROR = 'ERROR',
 }
 
 // Energy Monitoring Types
 export interface EnergyReading {
   id: string;
   deviceId: string;
+  valueWh: number; // Wh (watts-hour at moment)
+  voltage?: number; // Volts (optional)
+  current?: number; // Amperes (optional)
   timestamp: string;
-  voltage: number; // Volts
-  current: number; // Amperes
-  power: number; // Watts
-  energy: number; // kWh
-  powerFactor?: number;
 }
 
 export interface EnergyStats {
@@ -139,12 +134,14 @@ export interface Automation {
   name: string;
   description?: string;
   enabled: boolean;
-  trigger: AutomationTrigger;
-  actions: AutomationAction[];
-  createdBy: string;
+  triggerType: TriggerType;
+  cron?: string; // Cron expression for SCHEDULE triggers
+  condition?: string; // JSON condition for CONDITION triggers
+  action: string; // JSON action
+  creatorId?: string;
   createdAt: string;
   updatedAt: string;
-  lastRun?: string;
+  lastRunAt?: string;
 }
 
 export interface AutomationTrigger {

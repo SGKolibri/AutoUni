@@ -11,6 +11,11 @@ import { DevicesModule } from './modules/devices/devices.module';
 import { MqttModule } from './modules/mqtt/mqtt.module';
 import { EnergyModule } from './modules/energy/energy.module';
 import { AutomationsModule } from './modules/automations/automations.module';
+import { BuildingsModule } from './modules/buildings/buildings.module';
+import { FloorsModule } from './modules/floors/floors.module';
+import { RoomsModule } from './modules/rooms/rooms.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
@@ -23,10 +28,15 @@ import { AutomationsModule } from './modules/automations/automations.module';
     RealtimeModule,
     UserModule,
     AuthModule,
+    BuildingsModule,
+    FloorsModule,
+    RoomsModule,
     DevicesModule,
     MqttModule,
     EnergyModule,
     AutomationsModule,
+    NotificationsModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

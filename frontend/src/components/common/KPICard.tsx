@@ -1,4 +1,4 @@
-import { Card, CardContent, Box, Typography, Skeleton } from '@mui/material';
+import { Card, CardContent, Box, Typography, Skeleton, useTheme } from '@mui/material';
 import { TrendingUp, TrendingDown } from '@mui/icons-material';
 
 interface KPICardProps {
@@ -14,28 +14,38 @@ interface KPICardProps {
   loading?: boolean;
 }
 
-const KPICard = ({ title, value, subtitle, icon, color, trend, loading }: KPICardProps) => {
+const KPICard: React.FC<KPICardProps> = ({
+  title,
+  value,
+  subtitle,
+  icon,
+  color = 'primary',
+  trend,
+  loading = false,
+}) => {
+  const theme = useTheme();
+
   const colorMap = {
-    primary: '#1976D2',
-    secondary: '#388E3C',
-    success: '#4CAF50',
-    warning: '#FF9800',
-    error: '#D32F2F',
-    info: '#0288D1',
+    primary: theme.palette.primary.main,
+    secondary: theme.palette.secondary.main,
+    success: theme.palette.success.main,
+    error: theme.palette.error.main,
+    warning: theme.palette.warning.main,
+    info: theme.palette.info.main,
   };
 
   if (loading) {
     return (
-      <Card sx={{ height: '100%' }}>
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-            <Skeleton variant="circular" width={48} height={48} />
-            <Box sx={{ ml: 2, flexGrow: 1 }}>
-              <Skeleton width="60%" height={20} />
-              <Skeleton width="80%" height={32} sx={{ mt: 1 }} />
-            </Box>
-          </Box>
-        </CardContent>
+      <Card 
+        sx={{ 
+          minHeight: 160,
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Skeleton variant="rectangular" width="100%" height="100%" />
       </Card>
     );
   }
@@ -43,65 +53,108 @@ const KPICard = ({ title, value, subtitle, icon, color, trend, loading }: KPICar
   return (
     <Card
       sx={{
+        minHeight: 160,
+        width: '100%',
         height: '100%',
-        transition: 'transform 0.2s',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease-in-out',
         '&:hover': {
           transform: 'translateY(-4px)',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         },
       }}
     >
-      <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              {title}
-            </Typography>
-            
-            <Typography variant="h4" fontWeight={700} sx={{ mb: 0.5 }}>
-              {value}
-            </Typography>
+      {/* Background Gradient Accent */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: 120,
+          height: 120,
+          background: `linear-gradient(135deg, ${colorMap[color]}15 0%, ${colorMap[color]}05 100%)`,
+          borderRadius: '0 0 0 100%',
+        }}
+      />
 
-            {subtitle && (
-              <Typography variant="caption" color="text.secondary">
-                {subtitle}
-              </Typography>
-            )}
-
-            {trend && (
-              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                {trend.isPositive ? (
-                  <TrendingUp sx={{ fontSize: 18, color: '#4CAF50', mr: 0.5 }} />
-                ) : (
-                  <TrendingDown sx={{ fontSize: 18, color: '#D32F2F', mr: 0.5 }} />
-                )}
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: trend.isPositive ? '#4CAF50' : '#D32F2F',
-                    fontWeight: 600,
-                  }}
-                >
-                  {Math.abs(trend.value).toFixed(1)}%
-                </Typography>
-              </Box>
-            )}
-          </Box>
-
+      <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            fontWeight={600}
+            sx={{ 
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              fontSize: '0.75rem',
+            }}
+          >
+            {title}
+          </Typography>
           <Box
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 56,
-              height: 56,
+              width: 48,
+              height: 48,
               borderRadius: 2,
-              backgroundColor: colorMap[color] + '15',
+              backgroundColor: `${colorMap[color]}15`,
               color: colorMap[color],
             }}
           >
             {icon}
           </Box>
         </Box>
+
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <Typography 
+            variant="h4" 
+            fontWeight={700}
+            sx={{ 
+              mb: 0.5,
+              color: theme.palette.text.primary,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {value}
+          </Typography>
+          
+          {subtitle && (
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ fontWeight: 500 }}
+            >
+              {subtitle}
+            </Typography>
+          )}
+        </Box>
+
+        {trend !== undefined && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 1 }}>
+            {trend.isPositive ? (
+              <TrendingUp sx={{ fontSize: 18, color: 'success.main' }} />
+            ) : (
+              <TrendingDown sx={{ fontSize: 18, color: 'error.main' }} />
+            )}
+            <Typography
+              variant="caption"
+              fontWeight={600}
+              sx={{
+                color: trend.isPositive ? 'success.main' : 'error.main',
+              }}
+            >
+              {trend.isPositive ? '+' : ''}{trend.value}%
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ ml: 0.5 }}>
+              vs. período anterior
+            </Typography>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

@@ -290,7 +290,7 @@ async function seedSampleEnergyReadings() {
         in: ['LIGHT', 'AC', 'PROJECTOR'],
       },
     },
-    take: 10,
+    take: 50, // Aumentado de 10 para 50 dispositivos
   });
   
   if (devices.length === 0) {
