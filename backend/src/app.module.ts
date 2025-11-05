@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { RealtimeGateway } from './modules/realtime/realtime.gateway';
 import { PrismaService } from 'prisma/prisma.service';
+import { DevicesModule } from './modules/devices/devices.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PrismaService } from 'prisma/prisma.service';
     }),
     UserModule,
     AuthModule,
+    DevicesModule,
     EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],

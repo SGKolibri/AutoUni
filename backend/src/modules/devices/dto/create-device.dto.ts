@@ -27,7 +27,10 @@ export class CreateDeviceDto {
   @IsUUID()
   roomId: string;
 
-  @ApiProperty({ example: 'Luminária Hall', description: 'Nome do dispositivo' })
+  @ApiProperty({
+    example: 'Luminária Hall',
+    description: 'Nome do dispositivo',
+  })
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -57,7 +60,10 @@ export class CreateDeviceDto {
   @IsNumber({}, { message: 'powerRating must be a number' })
   powerRating?: number; // Watts
 
-  @ApiPropertyOptional({ example: 75, description: 'Intensidade/brightness 0-100' })
+  @ApiPropertyOptional({
+    example: 75,
+    description: 'Intensidade/brightness 0-100',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -65,7 +71,10 @@ export class CreateDeviceDto {
   @Max(100)
   intensity?: number; // 0-100
 
-  @ApiPropertyOptional({ example: 24, description: 'Temperatura (Celsius) — para ACs' })
+  @ApiPropertyOptional({
+    example: 24,
+    description: 'Temperatura (Celsius) — para ACs',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber({}, { message: 'temperature must be a number' })
@@ -78,7 +87,10 @@ export class CreateDeviceDto {
   @IsBoolean()
   online?: boolean;
 
-  @ApiPropertyOptional({ example: new Date().toISOString(), description: 'Última vez visto (ISO string)' })
+  @ApiPropertyOptional({
+    example: new Date().toISOString(),
+    description: 'Última vez visto (ISO string)',
+  })
   @IsOptional()
   @IsDateString()
   lastSeen?: Date | string;
