@@ -1,24 +1,4 @@
 services:
-  db:
-    image: postgres:15
-    container_name: autoUniPostgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Fahrenheit451
-      POSTGRES_DB: autouni
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d autouni"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    ports:
-      - "5433:5432"
-    networks:
-      - autouni-network
-
   mqtt:
     image: eclipse-mosquitto:latest
     container_name: autoUniMqtt
@@ -40,14 +20,12 @@ services:
     container_name: autoUniApi
     restart: unless-stopped
     depends_on:
-      db:
-        condition: service_healthy
       mqtt:
         condition: service_started
     environment:
       NODE_ENV: production
-      # Dentro do container, a DB é acessível pelo hostname do serviço Docker (db) e porta interna 5432
-      DATABASE_URL: "postgresql://postgres:Fahrenheit451@db:5432/autouni?schema=public"
+      # Banco de dados PostgreSQL no Render (externo)
+      DATABASE_URL: "postgresql://autouni_api_db_user:LsnPiTytnaCo4Ed2ntFYk7R24qCHIM5L@dpg-d46i8o7gi27c73aroj0g-a.oregon-postgres.render.com/autouni_api_db"
       # MQTT dentro do container usa o hostname do serviço (mqtt)
       MQTT_URL: "mqtt://mqtt:1883"
       PORT: 3000
@@ -65,7 +43,6 @@ services:
       - autouni-network
 
 volumes:
-  pgdata:
   mqtt-data:
   mqtt-logs:
 

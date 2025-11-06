@@ -1,0 +1,52 @@
+services:
+  # Backend API
+  - type: web
+    name: autouni-backend
+    runtime: node
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: backend  # ⚠️ Pasta onde está o backend
+    buildCommand: npm install && npm run build && npm run copy-seeds
+    startCommand: npm run start:prod
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false  # Será configurado manualmente no dashboard
+      - key: MQTT_URL
+        value: mqtt://mqtt.autouni.com:1883
+      - key: JWT_SECRET
+        generateValue: true  # Gera automaticamente um secret seguro
+      - key: ROOT_EMAIL
+        value: admin@autouni.edu.br
+      - key: ROOT_PASSWORD
+        generateValue: true  # Gera automaticamente
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+
+  # MQTT Broker (opcional - pode usar serviço externo)
+  # - type: web
+  #   name: autouni-mqtt
+  #   runtime: docker
+  #   dockerfilePath: ./backend/Dockerfile.mqtt
+  #   ...
+
+databases:
+  # Referência ao banco PostgreSQL já existente
+  - name: autouni-db
+    databaseName: autouni_api_db
+    user: autouni_api_db_user
+    region: oregon
+    plan: free
